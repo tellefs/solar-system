@@ -1,5 +1,6 @@
 #include "solarsystem.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 SolarSystem::SolarSystem() :
@@ -23,6 +24,8 @@ void SolarSystem::calculateForcesAndEnergy()
         // Reset forces on all bodies
         body.force.zeros();
     }
+    double pi = M_PI;
+    double G = 4*pi*pi;
 
     for(int i=0; i<numberOfBodies(); i++) {
         CelestialBody &body1 = m_bodies[i];
@@ -34,6 +37,11 @@ void SolarSystem::calculateForcesAndEnergy()
             //            body1.force += force;
             //            body2.force -= force;
             // Calculate the force and potential energy here
+            // Calculate the force and potential energy here (!!!!!)
+            vec3 force = G*body1.mass*body2.mass/(dr*dr*dr)*deltaRVector;
+            body1.force += force;
+            body2.force -= force;
+
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
