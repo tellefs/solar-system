@@ -95,7 +95,7 @@ int main(int numArguments, char **arguments)
         solarSystem.writeToFile("../solar-system/positions.dat");
     }
 
-    cout << "I just created my first solar system that has " << solarSystem.bodies().size() << " objects." << endl;
+    cout << "I just created my a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
     return 0;
 
 }
