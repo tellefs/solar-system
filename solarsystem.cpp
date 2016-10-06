@@ -25,7 +25,7 @@ void SolarSystem::calculateForcesAndEnergy()
         body.force.zeros();
     }
     double pi = M_PI;
-    double G = 4*pi*pi;
+    double G = -4*pi*pi;
 
     for(int i=0; i<numberOfBodies(); i++) {
         CelestialBody &body1 = m_bodies[i];
@@ -42,6 +42,7 @@ void SolarSystem::calculateForcesAndEnergy()
             body1.force += force;
             body2.force -= force;
 
+            m_potentialEnergy += G*body1.mass*body2.mass/dr;
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
