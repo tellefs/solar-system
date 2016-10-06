@@ -21,6 +21,12 @@ with open("positions.dat", "r") as infile:
 	for i in range(n-1):
 		r_earth[i] = np.asarray(planets[2][i].split()).astype(float)
 
+	r_sun = np.zeros((n,4))
+	for i in range(n-1):
+		r_sun[i] = np.asarray(planets[1][i].split()).astype(float)
+	
+	
+
 	# x_earth = []
 	# for i in range(n):
 	# 	x_earth.append(float(planets[2][i][0]))
@@ -49,7 +55,7 @@ with open("positions.dat", "r") as infile:
 	mpl.rcParams['legend.fontsize'] = 10
 	fig = plt.figure()
 	ax = fig.gca(projection='3d')
-	ax.plot(r_earth[:,1],r_earth[:,2],r_earth[:,3], label="balle")
+	ax.plot(r_earth[0:-1,1],r_earth[0:-1,2],r_earth[0:-1,3], label="balle")
 	ax.legend()
 
 	plt.show()
