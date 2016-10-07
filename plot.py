@@ -14,10 +14,17 @@ with open("positions.dat", "r") as infile:
 	for i in range(1, numberOfPlanets+1):
 		planets[i] = data[i+1::numberOfPlanets+2]
 
-	r_earth = np.zeros((n,4))
-	for i in range(n-1):
-		r_earth[i] = np.asarray(planets[2][i].split()).astype(float)
+	r_vec_planet = {}
+	for i in range(1, numberOfPlanets+1):
+		r_vec_planet[i] = np.zeros((n,4))
+		for j in range(n-1):
+			r_vec_planet[i][j] = np.asarray(planets[2][i].split()).astype(float)
 
+	# r_earth = np.zeros((n,4))
+	# for i in range(n-1):
+	# 	r_earth[i] = np.asarray(planets[2][i].split()).astype(float)
+
+	r_earth = r_vec_planet[2]
 	mpl.rcParams['legend.fontsize'] = 10
 	fig = plt.figure()
 	ax = fig.gca(projection='3d')
