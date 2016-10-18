@@ -62,7 +62,7 @@ int main(int numArguments, char **arguments)
                                      (1.31e22)/sun_mass); //pluto
 
 /*  // Create some random objects
-    for (int i=0; i<100; i++){
+    for (int i=0; i<300; i++){
         double r1 = ((double) rand() / (RAND_MAX));
         double r2 = ((double) rand() / (RAND_MAX));
         double r3 = ((double) rand() / (RAND_MAX));
@@ -102,7 +102,7 @@ int main(int numArguments, char **arguments)
     Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(solarSystem);
-        solarSystem.writeToFile("../solar-system/positions.dat");
+        solarSystem.writeToFile("positions.dat");
     }
 
     cout << "I just created my a solar system that has " << solarSystem.bodies().size() << " objects." << endl;

@@ -25,8 +25,8 @@ with open("positions.dat", "r") as infile:
 	for k in range(1, numberOfPlanets+1):
 		extract_plot_planet(k)
 	ax.legend()
-	# ax.set_xlim3d(-2,2)
-	# ax.set_ylim3d(-2,2)
-	# ax.set_zlim3d(-2,2)
+	ax.set_xlim3d(-2,2)
+	ax.set_ylim3d(-2,2)
+	ax.set_zlim3d(-2,2)
 
 	plt.show()
