@@ -19,7 +19,7 @@ void Verlet::integrateOneStep(SolarSystem &system){
     system.calculateForcesAndEnergy(); //re-calculating the forces, which we need for the full velocity step
 
     for(CelestialBody &body : system.bodies()){
-        body.velocity += body.force*m_dt; //updating the velocity, final
+        body.velocity += body.force/body.mass*m_dt*0.5; //updating the velocity, final
     }
 
 }

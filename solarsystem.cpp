@@ -33,10 +33,6 @@ void SolarSystem::calculateForcesAndEnergy()
             CelestialBody &body2 = m_bodies[j];
             vec3 deltaRVector = body1.position - body2.position;
             double dr = deltaRVector.length();
-            //            vec3 force = G*M*m / (dr*dr*dr) * deltaRVector;
-            //            body1.force += force;
-            //            body2.force -= force;
-            // Calculate the force and potential energy here
             // Calculate the force and potential energy here (!!!!!)
             vec3 force = G*body1.mass*body2.mass/(dr*dr*dr)*deltaRVector;
             body1.force += force;

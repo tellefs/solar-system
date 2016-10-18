@@ -3,7 +3,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 with open("positions.dat", "r") as infile:
 
 	data = np.char.strip(np.array(infile.readlines()))
@@ -14,21 +13,23 @@ with open("positions.dat", "r") as infile:
 	for i in range(1, numberOfPlanets+1):
 		planets[i] = data[i+1::numberOfPlanets+2]
 
-	r_vec_planet = {}
-	for i in range(1, numberOfPlanets+1):
-		r_vec_planet[i] = np.zeros((n,4))
-		for j in range(n-1):
-			r_vec_planet[i][j] = np.asarray(planets[2][i].split()).astype(float)
+	def extract_plot_planet(integer_number):
+		r_planet = np.zeros((n,4))
+		for i in range(n-1):
+			r_planet[i] = np.asarray(planets[integer_number][i].split()).astype(float)
+		ax.plot(r_planet[0:-1,1],r_planet[0:-1,2],r_planet[0:-1,3], label="balle")
 
-	# r_earth = np.zeros((n,4))
-	# for i in range(n-1):
-	# 	r_earth[i] = np.asarray(planets[2][i].split()).astype(float)
-
-	r_earth = r_vec_planet[2]
 	mpl.rcParams['legend.fontsize'] = 10
 	fig = plt.figure()
 	ax = fig.gca(projection='3d')
-	ax.plot(r_earth[:,1],r_earth[:,2],r_earth[:,3], label="balle")
+	for k in range(1, numberOfPlanets+1):
+		extract_plot_planet(k)
 	ax.legend()
+	ax.set_xlim3d(-2,2)
+	ax.set_ylim3d(-2,2)
+	ax.set_zlim3d(-2,2)
 
 	plt.show()
+
+# 	# a = np.asarray(planets[1][0].split()).astype(float)
+# 	# print a
