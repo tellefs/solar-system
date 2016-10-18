@@ -47,7 +47,7 @@ void SolarSystem::calculateForcesAndEnergy()
 
     }
     //caclulating m_potentialEnergy for mercury
-    CelestialBody mercury = m_bodies[0];
+    CelestialBody &mercury = m_bodies[0];
     double c_squared = 173*173/365.242199; //AU/day
     double r_squared = mercury.position.lengthSquared();
     double l_squared = mercury.position.cross(mercury.velocity).lengthSquared();
