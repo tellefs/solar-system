@@ -5,9 +5,10 @@ using namespace std;
 
 SolarSystem::SolarSystem() :
     m_kineticEnergy(0),
-    m_potentialEnergy(0)
-{
-}
+    m_potentialEnergy(0),
+    m_potentialEnergy_mercury(0)
+{}
+
 
 CelestialBody& SolarSystem::createCelestialBody(vec3 position, vec3 velocity, double mass) {
     m_bodies.push_back( CelestialBody(position, velocity, mass) );
@@ -19,6 +20,7 @@ void SolarSystem::calculateForcesAndEnergy()
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
     m_angularMomentum.zeros();
+    m_potentialEnergy_mercury = 0;
 
     for(CelestialBody &body : m_bodies) {
         // Reset forces on all bodies
@@ -42,7 +44,15 @@ void SolarSystem::calculateForcesAndEnergy()
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
+
     }
+    //caclulating m_potentialEnergy_mercury
+    CelestialBody mercury = m_bodies[0];
+    double c_squared = 173*173/365.242199;
+    double r_squared = mercury.position.lengthSquared()*mercury.position.lengthSquared();
+    double l_squared = mercury.position.cross(mercury.velocity).lengthSquared();
+    m_potentialEnergy = (G*mercury.mass*2e30/r_squared)*(1 +  3*l_squared/(c_squared*r_squared));
+
 }
 
 int SolarSystem::numberOfBodies() const
@@ -59,6 +69,15 @@ double SolarSystem::potentialEnergy() const
 {
     return m_potentialEnergy;
 }
+
+/*double SolarSystem::potentialEnergy_mercury () const
+{
+    double r_squared = ;
+    double c_squared = ;
+    double l_squared =
+
+    return m_potentialEnergy_mercury;
+}*/
 
 double SolarSystem::kineticEnergy() const
 {

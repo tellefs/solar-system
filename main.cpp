@@ -61,6 +61,11 @@ int main(int numArguments, char **arguments)
                                      vec3(3.065499934972441E-03, 2.293283900283695E-04, -9.119583887771224E-04)*AUday_to_AUyear,
                                      (1.31e22)/sun_mass); //pluto
 
+
+
+
+//    example for creating multiple objects randomly placed between -10:10 (project 5)
+
 /*  // Create some random objects
     for (int i=0; i<300; i++){
         double r1 = ((double) rand() / (RAND_MAX));
@@ -77,6 +82,7 @@ int main(int numArguments, char **arguments)
 
 
 //    example for creating multiple objects randomly placed between -10:10
+
 //    for(int i=0; i<1000; i++) {
 //        double x = (2*rand() / double(RAND_MAX) - 1) * 10;
 //        double y = (2*rand() / double(RAND_MAX) - 1) * 10;
@@ -104,8 +110,24 @@ int main(int numArguments, char **arguments)
         integrator.integrateOneStep(solarSystem);
         solarSystem.writeToFile("positions.dat");
     }
-
     cout << "I just created my a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
+
+
+    //for system with only mercury
+
+    SolarSystem mercurySystem ;
+    mercurySystem.createCelestialBody(vec3(-1.388351215994794E-01, 2.874076124640064E-01, 3.611730762400382E-02),
+                                     vec3(-3.081033504804020E-02, -1.153752302730325E-02, 1.883146626624065E-03)*AUday_to_AUyear,
+                                     (2.4e23)/sun_mass); //mercury
+
+
+    for(int timestep=0; timestep<numTimesteps; timestep++) {
+        integrator.integrateOneStep(mercurySystem);
+        mercurySystem.writeToFile("../solar-system/mercury_system.dat");
+  }
+
+
+
     return 0;
 
 }
