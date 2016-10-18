@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e5;
+    int numTimesteps = 1e4;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = 0.001;
 
