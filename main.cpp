@@ -1,15 +1,15 @@
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
 #include "solarsystem.h"
 #include "euler.h"
-#include <stdlib.h>
 #include "verlet.h"
 
 using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e4;
+    int numTimesteps = 1e5;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = 0.001;
 
@@ -60,9 +60,8 @@ int main(int numArguments, char **arguments)
     solarSystem.createCelestialBody(vec3(9.393096450667111E+00, -3.182064102580347E+01, 6.879522592437006E-01),
                                      vec3(3.065499934972441E-03, 2.293283900283695E-04, -9.119583887771224E-04)*AUday_to_AUyear,
                                      (1.31e22)/sun_mass); //pluto
-    solarSystem.createCelestialBody(vec3(0.0, 0.0, -100), vec3(0.0, 0.0, 9e-9)*AUday_to_AUyear, 1); //Sun-like body
 
-
+/*  // Create some random objects
     for (int i=0; i<100; i++){
         double r1 = ((double) rand() / (RAND_MAX));
         double r2 = ((double) rand() / (RAND_MAX));
@@ -74,13 +73,7 @@ int main(int numArguments, char **arguments)
 
         solarSystem.createCelestialBody(vec3(r1, r2, r3)*5, vec3(r4, r5, r6)*AUday_to_AUyear*(1e-2), r7);
     }
-
-
-
-
-
-
-
+*/
 
 
 //    example for creating multiple objects randomly placed between -10:10
@@ -98,10 +91,12 @@ int main(int numArguments, char **arguments)
     // To get a list (a reference, not copy) of all the bodies in the solar system, we use the .bodies() function
     vector<CelestialBody> &bodies = solarSystem.bodies();
 
+  // Give the position and velocity of objects
     for(int i = 0; i<bodies.size(); i++) {
         CelestialBody &body = bodies[i]; // Reference to this body
         cout << "The position of this object is " << body.position << " with velocity " << body.velocity << endl;
     }
+
 
     //Euler integrator(dt);
     Verlet integrator(dt);
@@ -114,5 +109,3 @@ int main(int numArguments, char **arguments)
     return 0;
 
 }
-
-
