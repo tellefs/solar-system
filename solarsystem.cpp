@@ -12,7 +12,7 @@ SolarSystem::SolarSystem() :
 
 CelestialBody& SolarSystem::createCelestialBody(vec3 position, vec3 velocity, double mass) {
     m_bodies.push_back( CelestialBody(position, velocity, mass) );
-    return m_bodies.back(); // Return reference to the newest added celstial body
+    return m_bodies.back(); // Return reference to the newest added celestial body
 }
 
 void SolarSystem::calculateForcesAndEnergy()
@@ -46,12 +46,13 @@ void SolarSystem::calculateForcesAndEnergy()
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
 
     }
-    //caclulating m_potentialEnergy_mercury
+    //caclulating m_potentialEnergy for mercury
     CelestialBody mercury = m_bodies[0];
-    double c_squared = 173*173/365.242199;
-    double r_squared = mercury.position.lengthSquared()*mercury.position.lengthSquared();
+    double c_squared = 173*173/365.242199; //AU/day
+    double r_squared = mercury.position.lengthSquared();
     double l_squared = mercury.position.cross(mercury.velocity).lengthSquared();
-    m_potentialEnergy = (G*mercury.mass*2e30/r_squared)*(1 +  3*l_squared/(c_squared*r_squared));
+    double relCorrection = 3*l_squared/(c_squared*r_squared);
+    m_potentialEnergy = (G*mercury.mass/r_squared)*(1 +  relCorrection);
 
 }
 

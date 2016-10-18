@@ -23,7 +23,8 @@ int main(int numArguments, char **arguments)
     // We don't need to store the reference, but just call the function without a left hand side
     // now i need my planets
     double sun_mass = 2e30;
-    double AUday_to_AUyear= 365.242199;
+    double AUday_to_AUyear=
+            365.242199;
     solarSystem.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,
                                      (6e24)/sun_mass)
@@ -38,8 +39,8 @@ int main(int numArguments, char **arguments)
                                      (2.4e23)/sun_mass); //mercury
 
     solarSystem.createCelestialBody(vec3(2.531171709934956E-03, -7.235439738148072E-01, -1.006620932838833E-02),
-                                     vec3(2.008934322426700E-02, -9.726053625259401E-05, -1.160780990531775E-03)*AUday_to_AUyear,
-                                     (4.9e24)/sun_mass); //venus
+                                    vec3(2.008934322426700E-02, -9.726053625259401E-05, -1.160780990531775E-03)*AUday_to_AUyear,
+                                    (4.9e24)/sun_mass); //venus
 
     solarSystem.createCelestialBody(vec3(1.074137801923908E+00, -8.751565791508180E-01, -4.484330241084649E-02),
                                      vec3(9.406114898320066E-03, 1.202410268499505E-02, 2.097435381751857E-05)*AUday_to_AUyear,
@@ -67,7 +68,7 @@ int main(int numArguments, char **arguments)
 //    example for creating multiple objects randomly placed between -10:10 (project 5)
 
 /*  // Create some random objects
-    for (int i=0; i<100; i++){
+    for (int i=0; i<300; i++){
         double r1 = ((double) rand() / (RAND_MAX));
         double r2 = ((double) rand() / (RAND_MAX));
         double r3 = ((double) rand() / (RAND_MAX));
@@ -108,7 +109,7 @@ int main(int numArguments, char **arguments)
     Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(solarSystem);
-        solarSystem.writeToFile("../solar-system/positions.dat");
+        solarSystem.writeToFile("positions.dat");
     }
     cout << "I just created my a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
@@ -123,7 +124,7 @@ int main(int numArguments, char **arguments)
 
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(mercurySystem);
-        mercurySystem.writeToFile("../solar-system/mercury_system.dat");
+        mercurySystem.writeToFile("mercury_system.dat");
   }
 
 
