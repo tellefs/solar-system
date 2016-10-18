@@ -13,7 +13,7 @@ with open("positions.dat", "r") as infile:
 	for i in range(1, numberOfPlanets+1):
 		planets[i] = data[i+1::numberOfPlanets+2]
 
-<<<<<<< HEAD
+
 	# a = np.asarray(planets[1][0].split()).astype(float)
 	# print a
 	
@@ -22,14 +22,13 @@ with open("positions.dat", "r") as infile:
 	for i in range(n-1):
 		r_earth[i] = np.asarray(planets[2][i].split()).astype(float)
 
-=======
->>>>>>> 394ebf307c925fc617a934eb24550c2e09a5367b
+
 	def extract_plot_planet(integer_number):
 		r_planet = np.zeros((n,4))
 		for i in range(n-1):
 			r_planet[i] = np.asarray(planets[integer_number][i].split()).astype(float)
 		ax.plot(r_planet[0:-1,1],r_planet[0:-1,2],r_planet[0:-1,3], label="balle")
-<<<<<<< HEAD
+
 	
 	# x_earth = []
 	# for i in range(n):
@@ -61,8 +60,7 @@ with open("positions.dat", "r") as infile:
 	# r_earth = np.zeros((n,4))
 	# for i in range(n-1):
 	# 	r_earth[i] = np.asarray(planets[2][i].split()).astype(float)
-=======
->>>>>>> 394ebf307c925fc617a934eb24550c2e09a5367b
+
 
 	mpl.rcParams['legend.fontsize'] = 10
 	fig = plt.figure()
