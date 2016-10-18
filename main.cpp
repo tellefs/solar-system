@@ -64,12 +64,7 @@ int main(int numArguments, char **arguments)
 
 
 
-
-
-
-
-
-//    example for creating multiple objects randomly placed between -10:10
+//    example for creating multiple objects randomly placed between -10:10 (project 5)
 //    for(int i=0; i<1000; i++) {
 //        double x = (2*rand() / double(RAND_MAX) - 1) * 10;
 //        double y = (2*rand() / double(RAND_MAX) - 1) * 10;
@@ -95,8 +90,23 @@ int main(int numArguments, char **arguments)
         integrator.integrateOneStep(solarSystem);
         solarSystem.writeToFile("../solar-system/positions.dat");
     }
-
     cout << "I just created my a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
+
+
+    //for system with only mercury
+    SolarSystem mercurySystem ;
+    mercurySystem.createCelestialBody(vec3(-1.388351215994794E-01, 2.874076124640064E-01, 3.611730762400382E-02),
+                                     vec3(-3.081033504804020E-02, -1.153752302730325E-02, 1.883146626624065E-03)*AUday_to_AUyear,
+                                     (2.4e23)/sun_mass); //mercury
+
+
+    for(int timestep=0; timestep<numTimesteps; timestep++) {
+        integrator.integrateOneStep(solarSystem);
+        mercurySystem.writeToFile("../solar-system/mercury_system.dat");
+  }
+
+
+
     return 0;
 
 }

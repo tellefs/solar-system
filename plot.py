@@ -13,7 +13,6 @@ with open("positions.dat", "r") as infile:
 	for i in range(1, numberOfPlanets+1):
 		planets[i] = data[i+1::numberOfPlanets+2]
 
-<<<<<<< HEAD
 	# a = np.asarray(planets[1][0].split()).astype(float)
 	# print a
 	
@@ -47,13 +46,13 @@ with open("positions.dat", "r") as infile:
 	# x = r[:,0]
 	# y = r[:,1]
 	# z = r[:,2]
-=======
+
 	r_vec_planet = {}
 	for i in range(1, numberOfPlanets+1):
 		r_vec_planet[i] = np.zeros((n,4))
 		for j in range(n-1):
 			r_vec_planet[i][j] = np.asarray(planets[2][i].split()).astype(float)
->>>>>>> 0f5e453bf3531657e2fdd4ec60344ea5b2ac4214
+
 
 	# r_earth = np.zeros((n,4))
 	# for i in range(n-1):
