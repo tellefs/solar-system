@@ -75,8 +75,11 @@ void SolarSystem::writeToFile(string filename)
         }
     }
 
+<<<<<<< HEAD
     m_file << numberOfBodies() << endl;
     m_file << "Comment line that needs to be here. Ballefrans." << endl;
+=======
+>>>>>>> 394ebf307c925fc617a934eb24550c2e09a5367b
     m_file <<  numberOfBodies() << endl;
     m_file << "Planet1 = sun, planet2 = earth,... " << endl;
     for(CelestialBody &body : m_bodies) {
