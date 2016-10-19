@@ -102,7 +102,8 @@ int main(int numArguments, char **arguments)
     // Euler integrator(dt);
     Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
-        integrator.integrateOneStep(solarSystem, false);
+        bool relCorr = false;
+        integrator.integrateOneStep(solarSystem, relCorr);
         solarSystem.writeToFile("positions.dat");
     }
     cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
@@ -119,7 +120,8 @@ int main(int numArguments, char **arguments)
 
     mercurySystem.writeToFile("mercury_system.dat");    // initial position
     for(int timestep=0; timestep<numTimesteps; timestep++) {
-        integrator.integrateOneStep(mercurySystem, true);
+        bool relCorr = true;
+        integrator.integrateOneStep(mercurySystem, relCorr);
         mercurySystem.writeToFile("mercury_system.dat");
   }
 
