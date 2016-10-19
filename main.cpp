@@ -23,8 +23,8 @@ int main(int numArguments, char **arguments)
     // We don't need to store the reference, but just call the function without a left hand side
     // now i need my planets
     double sun_mass = 2e30;
-    double AUday_to_AUyear=
-            365.242199;
+    double AUday_to_AUyear = 365.242199;
+
     solarSystem.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,
                                      (6e24)/sun_mass)

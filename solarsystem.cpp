@@ -73,7 +73,7 @@ void SolarSystem::calculateForcesAndEnergy_relCorr()
     mercury.force += force;
     sun.force -= force;
 
-    m_potentialEnergy = (G*mercury.mass*sun.mass/mercury.position.length())*(1 +  3*l_squared/(c_squared*r_squared)); // Supposed to be negative?
+    m_potentialEnergy += G*mercury.mass*sun.mass/dr;; // Supposed to be negative?
     m_kineticEnergy += 0.5*mercury.mass*mercury.velocity.lengthSquared();
 }
 
