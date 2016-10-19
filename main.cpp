@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e5;
+    int numTimesteps = 1e5; // numTimesteps/1e3 = years
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = 0.001;
 
@@ -63,28 +63,22 @@ int main(int numArguments, char **arguments)
                                      (1.31e22)/sun_mass); //pluto
 
 
+//  // Create some random celestial objects
+//    for (int i=0; i<300; i++){
+//        double r1 = ((double) rand() / (RAND_MAX));
+//        double r2 = ((double) rand() / (RAND_MAX));
+//        double r3 = ((double) rand() / (RAND_MAX));
+//        double r4 = ((double) rand() / (RAND_MAX));
+//        double r5 = ((double) rand() / (RAND_MAX));
+//        double r6 = ((double) rand() / (RAND_MAX));
+//        double r7 = ((double) rand() / (RAND_MAX));
+
+//        solarSystem.createCelestialBody(vec3(r1, r2, r3)*5, vec3(r4, r5, r6)*AUday_to_AUyear*(1e-2), r7);
+//    }
 
 
-//    example for creating multiple objects randomly placed between -10:10 (project 5)
-
-/*  // Create some random objects
-    for (int i=0; i<300; i++){
-        double r1 = ((double) rand() / (RAND_MAX));
-        double r2 = ((double) rand() / (RAND_MAX));
-        double r3 = ((double) rand() / (RAND_MAX));
-        double r4 = ((double) rand() / (RAND_MAX));
-        double r5 = ((double) rand() / (RAND_MAX));
-        double r6 = ((double) rand() / (RAND_MAX));
-        double r7 = ((double) rand() / (RAND_MAX));
-
-        solarSystem.createCelestialBody(vec3(r1, r2, r3)*5, vec3(r4, r5, r6)*AUday_to_AUyear*(1e-2), r7);
-    }
-*/
-
-
-//    example for creating multiple objects randomly placed between -10:10
-
-//    for(int i=0; i<1000; i++) {
+//  //    example for creating multiple objects randomly placed between -10:10
+//    for(int i=0; i<100; i++) {
 //        double x = (2*rand() / double(RAND_MAX) - 1) * 10;
 //        double y = (2*rand() / double(RAND_MAX) - 1) * 10;
 //        double z = (2*rand() / double(RAND_MAX) - 1) * 10;
@@ -95,40 +89,40 @@ int main(int numArguments, char **arguments)
 
 //    }
 
-    // To get a list (a reference, not copy) of all the bodies in the solar system, we use the .bodies() function
-    vector<CelestialBody> &bodies = solarSystem.bodies();
+//    // To get a list (a reference, not copy) of all the bodies in the solar system, we use the .bodies() function
+//    vector<CelestialBody> &bodies = solarSystem.bodies();
 
-  // Give the position and velocity of objects
-    for(int i = 0; i<bodies.size(); i++) {
-        CelestialBody &body = bodies[i]; // Reference to this body
-        cout << "The position of this object is " << body.position << " with velocity " << body.velocity << endl;
-    }
+//    // Give the position and velocity of objects
+//    for(int i = 0; i<bodies.size(); i++) {
+//        CelestialBody &body = bodies[i]; // Reference to this body
+//        cout << "The position of this object is " << body.position << " with velocity " << body.velocity << endl;
+//    }
 
-
-    //Euler integrator(dt);
+    solarSystem.writeToFile("positions.dat");   // initial position
+    // Euler integrator(dt);
     Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(solarSystem);
         solarSystem.writeToFile("positions.dat");
     }
-    cout << "I just created my a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
+    cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
 
-    //for system with only mercury
+    // for system with only mercury
 
-    SolarSystem mercurySystem ;
+    SolarSystem mercurySystem;
+
+    mercurySystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );     // sun
     mercurySystem.createCelestialBody(vec3(-1.388351215994794E-01, 2.874076124640064E-01, 3.611730762400382E-02),
                                      vec3(-3.081033504804020E-02, -1.153752302730325E-02, 1.883146626624065E-03)*AUday_to_AUyear,
-                                     (2.4e23)/sun_mass); //mercury
+                                     (2.4e23)/sun_mass);    //mercury
 
-
+    mercurySystem.writeToFile("mercury_system.dat");    // initial position
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(mercurySystem);
         mercurySystem.writeToFile("mercury_system.dat");
   }
 
 
-
     return 0;
-
 }

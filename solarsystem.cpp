@@ -19,8 +19,8 @@ void SolarSystem::calculateForcesAndEnergy()
 {
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
-    m_angularMomentum.zeros();
     m_potentialEnergy_mercury = 0;
+    m_angularMomentum.zeros();
 
     for(CelestialBody &body : m_bodies) {
         // Reset forces on all bodies
@@ -36,23 +36,24 @@ void SolarSystem::calculateForcesAndEnergy()
             vec3 deltaRVector = body1.position - body2.position;
             double dr = deltaRVector.length();
             // Calculate the force and potential energy here (!!!!!)
-            vec3 force = G*body1.mass*body2.mass/(dr*dr*dr)*deltaRVector;
+            vec3 force = G*body1.mass*body2.mass/(dr*dr*dr) * deltaRVector;
             body1.force += force;
             body2.force -= force;
 
-            m_potentialEnergy += G*body1.mass*body2.mass/dr;
+            m_potentialEnergy += G*body1.mass*body2.mass/dr; // Supposed to be negative?
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
 
     }
-    //caclulating m_potentialEnergy for mercury
-    CelestialBody &mercury = m_bodies[0];
-    double c_squared = 173*173/365.242199; //AU/day
+
+    //  Calculating m_potentialEnergy_mercury
+    CelestialBody &sun = m_bodies[0];
+    CelestialBody &mercury = m_bodies[1];
+    double c_squared = 173*173/(365.242199*365.242199); // AU^2/year^2
     double r_squared = mercury.position.lengthSquared();
     double l_squared = mercury.position.cross(mercury.velocity).lengthSquared();
-    double relCorrection = 3*l_squared/(c_squared*r_squared);
-    m_potentialEnergy = (G*mercury.mass/r_squared)*(1 +  relCorrection);
+    m_potentialEnergy = (G*mercury.mass*sun.mass/mercury.position.length())*(1 +  3*l_squared/(c_squared*r_squared)); // Supposed to be negative?
 
 }
 
@@ -96,7 +97,7 @@ void SolarSystem::writeToFile(string filename)
     }
 
     m_file <<  numberOfBodies() << endl;
-    m_file << "Planet1 = sun, planet2 = earth,... " << endl;
+    m_file << "Celestialbody1, Celestialbody2,...." << endl;
     for(CelestialBody &body : m_bodies) {
         m_file << "1 " << body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
     }
