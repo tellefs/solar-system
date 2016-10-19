@@ -6,9 +6,14 @@ Verlet::Verlet(double dt):
 {
 }
 
-void Verlet::integrateOneStep(SolarSystem &system){
+void Verlet::integrateOneStep(SolarSystem &system, bool relCorr){
 
-    system.calculateForcesAndEnergy(); //caclulating the force
+    if(relCorr == true){
+        system.calculateForcesAndEnergy_relCorr(); //calculating the force with relativistis correction
+    }
+    else if(relCorr == false){
+    system.calculateForcesAndEnergy(); //caclulating the force without relativistic correction
+    }
 
     for(CelestialBody &body : system.bodies()){
         //need to save the last step for the position, previousPosition
@@ -16,7 +21,12 @@ void Verlet::integrateOneStep(SolarSystem &system){
         body.position += body.velocity * m_dt; //updating the position, final
     }
 
+    if(relCorr == true){
+        system.calculateForcesAndEnergy_relCorr(); //re-caclulating forces with relativistic correction
+    }
+    else if(relCorr == false){
     system.calculateForcesAndEnergy(); //re-calculating the forces, which we need for the full velocity step
+    }
 
     for(CelestialBody &body : system.bodies()){
         body.velocity += body.force/body.mass*m_dt*0.5; //updating the velocity, final

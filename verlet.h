@@ -6,6 +6,6 @@ class Verlet
 public:
     double m_dt; //time step
     Verlet(double dt);
-    void integrateOneStep(class SolarSystem &system);
+    void integrateOneStep(class SolarSystem &system, bool relCorr);
 };
 #endif // VERLET_H

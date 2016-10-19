@@ -44,18 +44,39 @@ void SolarSystem::calculateForcesAndEnergy()
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
-
     }
+}
 
-    //  Calculating m_potentialEnergy_mercury
+void SolarSystem::calculateForcesAndEnergy_relCorr()
+{
+    m_kineticEnergy = 0;
+    m_potentialEnergy = 0;
+    m_angularMomentum.zeros();
+
+    for(CelestialBody &body : m_bodies) {
+        // Reset forces on all bodies
+        body.force.zeros();
+    }
+    double pi = M_PI;
+    double G = -4*pi*pi;
+    //  Calculating potential and kinetic energy
     CelestialBody &sun = m_bodies[0];
     CelestialBody &mercury = m_bodies[1];
     double c_squared = 63239.7263*63239.7263; // AU^2/year^2
     double r_squared = mercury.position.lengthSquared();
     double l_squared = mercury.position.cross(mercury.velocity).lengthSquared();
+
+    vec3 deltaRVector = mercury.position - sun.position;
+    double dr = deltaRVector.length();
+    // Calculate the force and potential energy here (!!!!!)
+    vec3 force = (G*mercury.mass*sun.mass/(dr*dr*dr))*(1 +  3*l_squared/(c_squared*r_squared))*deltaRVector; //G*.mass*body2.mass/(dr*dr*dr) * deltaRVector;
+    mercury.force += force;
+    sun.force -= force;
+
     m_potentialEnergy = (G*mercury.mass*sun.mass/mercury.position.length())*(1 +  3*l_squared/(c_squared*r_squared)); // Supposed to be negative?
-    cout<< l_squared <<endl;
+    m_kineticEnergy += 0.5*mercury.mass*mercury.velocity.lengthSquared();
 }
+
 
 int SolarSystem::numberOfBodies() const
 {
@@ -72,14 +93,6 @@ double SolarSystem::potentialEnergy() const
     return m_potentialEnergy;
 }
 
-/*double SolarSystem::potentialEnergy_mercury () const
-{
-    double r_squared = ;
-    double c_squared = ;
-    double l_squared =
-
-    return m_potentialEnergy_mercury;
-}*/
 
 double SolarSystem::kineticEnergy() const
 {
