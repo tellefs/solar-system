@@ -66,7 +66,7 @@ with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile:
 	plot_solarsystem(infile)
 	plt.show()
 """
-with open("../build-SolarSystem-Desktop-Debug/mercury_system.dat", "r") as infile:
+with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/mercury_system.dat", "r") as infile:
 
 	plot_mercury(infile)
 	plt.show()

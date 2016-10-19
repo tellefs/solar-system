@@ -5,8 +5,7 @@ using namespace std;
 
 SolarSystem::SolarSystem() :
     m_kineticEnergy(0),
-    m_potentialEnergy(0),
-    m_potentialEnergy_mercury(0)
+    m_potentialEnergy(0)
 {}
 
 
@@ -19,7 +18,6 @@ void SolarSystem::calculateForcesAndEnergy()
 {
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
-    m_potentialEnergy_mercury = 0;
     m_angularMomentum.zeros();
 
     for(CelestialBody &body : m_bodies) {
