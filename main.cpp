@@ -77,7 +77,7 @@ int main(int numArguments, char **arguments)
 //    }
 
 
-//  //    example for creating multiple objects randomly placed between -10:10
+//  // example for creating multiple objects randomly placed between -10:10
 //    for(int i=0; i<100; i++) {
 //        double x = (2*rand() / double(RAND_MAX) - 1) * 10;
 //        double y = (2*rand() / double(RAND_MAX) - 1) * 10;
@@ -109,22 +109,37 @@ int main(int numArguments, char **arguments)
     cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
 
-    // for system with only mercury
+    // Mercury perihelion precession
 
-    SolarSystem mercurySystem;
+    SolarSystem mercurySystem;  // classical
 
     mercurySystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );     // sun
     mercurySystem.createCelestialBody(vec3(0.3075, 0, 0),
                                      vec3(0, 12.44, 0),
                                      (2.4e23)/sun_mass);    //mercury
 
-    mercurySystem.writeToFile("mercury_system.dat");    // initial position
+    mercurySystem.writeToFile("mercury_system_class.dat");    // initial position
     for(int timestep=0; timestep<numTimesteps; timestep++) {
-        bool relCorr = true;
-        integrator.integrateOneStep(mercurySystem, relCorr);
-        mercurySystem.writeToFile("mercury_system.dat");
-  }
+        integrator.integrateOneStep(mercurySystem, false);
+        mercurySystem.writeToFile("mercury_system_class.dat");
+    }
+    cout << "I just created a solar system that has " << mercurySystem.bodies().size() << " objects." << endl;
 
+
+    SolarSystem mercurySystem_rel;
+
+    mercurySystem_rel.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );     // sun
+    mercurySystem_rel.createCelestialBody(vec3(0.3075, 0, 0),
+                                     vec3(0, 12.44, 0),
+                                     (2.4e23)/sun_mass);    //mercury
+
+
+    mercurySystem_rel.writeToFile("mercury_system_rel.dat");    // initial position
+    for(int timestep=0; timestep<numTimesteps; timestep++) {
+        integrator.integrateOneStep(mercurySystem_rel, true);
+        mercurySystem_rel.writeToFile("mercury_system_rel.dat");
+    }
+    cout << "I just created a solar system that has " << mercurySystem_rel.bodies().size() << " objects." << endl;
 
     return 0;
 }

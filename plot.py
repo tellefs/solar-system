@@ -48,12 +48,27 @@ def plot_mercury(file):
 		extract_plot_planet_xy(k, numberOfPlanets, n, planets)
 	
 """
-with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile:
+with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile: #for tellef
 
 	plot_solarsystem(infile)
 	plt.show()
+"""
 
-with open("../build-SolarSystem-Desktop-Debug/mercury_system.dat", "r") as infile:
+"""
+with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit--Debug/positions.dat", "r") as infile: #for andreas
+
+	plot_solarsystem(infile)
+	plt.show()
+"""
+
+"""
+with open("../build-SolarSystem-Desktop-Debug/mercury_system.dat", "r") as infile: #for tellef
+plot_mercury(infile)
+	plt.show()
+"""
+
+"""
+with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/mercury_system.dat", "r") as infile: #for andreas
 
 	plot_mercury(infile)
 	plt.show()
@@ -86,16 +101,25 @@ def perhelion_after_99yr(file):
 			index_min = i
 
 	theta = np.arctan(x_pos_after99[index_min]/y_pos_after99[index_min])*648000/np.pi 
-	print theta
 
 	time = np.linspace(index_after_99yr, n, len(norm))
 	plt.plot(time, norm)
-	plt.plot(time[index_min], norm[index_min], 'o')
+	plt.plot(time[index_min], norm[index_min], 'or')
 	plt.show()
+	return theta
 
 
-with open("../build-SolarSystem-Desktop-Debug/mercury_system.dat", "r") as infile:
+with open("../build-SolarSystem-Desktop-Debug/mercury_system_class.dat", "r") as infile:
 
-	perhelion_after_99yr(infile)
+	theta_class = perhelion_after_99yr(infile)
 
+with open("../build-SolarSystem-Desktop-Debug/mercury_system_rel.dat", "r") as infile:
 
+	theta_rel = perhelion_after_99yr(infile)
+
+print theta_class, theta_rel
+theta_arcsec = abs(theta_class-theta_rel)
+if theta_arcsec==43.:
+	print theta_arcsec, 'succsess'
+else:
+	print theta_arcsec, '= fuckccess'
