@@ -50,11 +50,11 @@ void SolarSystem::calculateForcesAndEnergy()
     //  Calculating m_potentialEnergy_mercury
     CelestialBody &sun = m_bodies[0];
     CelestialBody &mercury = m_bodies[1];
-    double c_squared = 173*173/(365.242199*365.242199); // AU^2/year^2
+    double c_squared = 63239.7263*63239.7263; // AU^2/year^2
     double r_squared = mercury.position.lengthSquared();
     double l_squared = mercury.position.cross(mercury.velocity).lengthSquared();
     m_potentialEnergy = (G*mercury.mass*sun.mass/mercury.position.length())*(1 +  3*l_squared/(c_squared*r_squared)); // Supposed to be negative?
-
+    cout<< l_squared <<endl;
 }
 
 int SolarSystem::numberOfBodies() const

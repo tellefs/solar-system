@@ -113,8 +113,8 @@ int main(int numArguments, char **arguments)
     SolarSystem mercurySystem;
 
     mercurySystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );     // sun
-    mercurySystem.createCelestialBody(vec3(-1.388351215994794E-01, 2.874076124640064E-01, 3.611730762400382E-02),
-                                     vec3(-3.081033504804020E-02, -1.153752302730325E-02, 1.883146626624065E-03)*AUday_to_AUyear,
+    mercurySystem.createCelestialBody(vec3(0.3075, 0, 0),
+                                     vec3(0, 12.44, 0),
                                      (2.4e23)/sun_mass);    //mercury
 
     mercurySystem.writeToFile("mercury_system.dat");    // initial position
