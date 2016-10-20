@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from scipy.signal import argrelextrema
 
 def read_planets(file):
 	data = np.char.strip(np.array(infile.readlines()))
@@ -63,7 +64,7 @@ with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit--Debug/positions.da
 
 """
 with open("../build-SolarSystem-Desktop-Debug/mercury_system.dat", "r") as infile: #for tellef
-plot_mercury(infile)
+	plot_mercury(infile)
 	plt.show()
 """
 
@@ -74,9 +75,8 @@ with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/mercury_syste
 	plt.show()
 """
 
-def perhelion_after_99yr(file):
+def perhelionPrecision(file):
 	numberOfPlanets, n, planets = read_planets(file)
-	index_after_99yr = int(99*1e3)
 	r_planet = np.zeros((n,4))
 	for k in range(1, numberOfPlanets+1):
 		for i in range(n-1):
@@ -86,40 +86,55 @@ def perhelion_after_99yr(file):
 	y_pos = r_planet[0:-1,2]
 	N = len(x_pos)
 
+	distToSun = np.zeros(N)
 	
-	x_pos_after99 = x_pos[index_after_99yr:N]
-	y_pos_after99 = y_pos[index_after_99yr:N]
-
-	norm = np.zeros(len(x_pos_after99))
+	for i in range(N):
+		distToSun[i] = np.linalg.norm([x_pos[i], y_pos[i]])
 	
-	norm_min = 1e10
-	index_min = 0
-	for i in range(len(norm)):
-		norm[i] = np.linalg.norm([x_pos_after99[i], y_pos_after99[i]])
-		if norm[i]<norm_min:
-			norm_min = norm[i]
-			index_min = i
+	time = np.linspace(0, N, N)
+	plt.plot(time, distToSun)
+	
+	localMinIndex = argrelextrema(distToSun, np.less)[0]
+	N_new = len(localMinIndex)
 
-	theta = np.arctan(x_pos_after99[index_min]/y_pos_after99[index_min])*648000/np.pi 
+	localMinPlot = np.zeros(N_new)
+	for i in range(N_new):
+		k = localMinIndex[i]
+		localMinPlot[i] = distToSun[k]
+	plt.plot(localMinIndex, localMinPlot, 'ro')
 
-	time = np.linspace(index_after_99yr, n, len(norm))
-	plt.plot(time, norm)
-	plt.plot(time[index_min], norm[index_min], 'or')
 	plt.show()
-	return theta
+
+	theta = np.zeros(N_new)
+	
+	for i in range(N_new):
+		k = localMinIndex[i]
+		theta[i] = np.arctan2(x_pos[k],y_pos[k])*(360*3600)/(2*np.pi)
+	
+	time = np.linspace(0, 100, N_new)
+	
+
+	return time, theta
+	
 
 
 with open("../build-SolarSystem-Desktop-Debug/mercury_system_class.dat", "r") as infile:
 
-	theta_class = perhelion_after_99yr(infile)
+	time, theta_class = perhelionPrecision(infile)
+
 
 with open("../build-SolarSystem-Desktop-Debug/mercury_system_rel.dat", "r") as infile:
 
-	theta_rel = perhelion_after_99yr(infile)
+	time, theta_rel = perhelionPrecision(infile)
 
-print theta_class, theta_rel
-theta_arcsec = abs(theta_class-theta_rel)
-if theta_arcsec==43.:
-	print theta_arcsec, 'succsess'
-else:
-	print theta_arcsec, '= fuckccess'
+
+plt.plot(time, theta_rel, label='rel', color='r')
+plt.plot(time, theta_class, label='class', color='b')
+plt.legend()
+plt.xlabel('time')
+plt.ylabel('arcsec')
+plt.show()
+
+
+
+

@@ -1,6 +1,8 @@
 #include "solarsystem.h"
 #include <iostream>
 #include <cmath>
+#include <iomanip>
+
 using namespace std;
 
 SolarSystem::SolarSystem() :
@@ -57,6 +59,30 @@ void SolarSystem::calculateForcesAndEnergy_relCorr()
     }
     double pi = M_PI;
     double G = -4*pi*pi;
+
+    /*
+    double c_squared = 63239.7263*63239.7263; // AU^2/year^2
+    for(int i=0; i<numberOfBodies(); i++) {
+        CelestialBody &body1 = m_bodies[i];
+        for(int j=i+1; j<numberOfBodies(); j++) {
+            CelestialBody &body2 = m_bodies[j];
+
+            double r_squared = body1.position.lengthSquared();
+            double l_squared = body1.position.cross(body1.velocity).lengthSquared();
+            vec3 deltaRVector = body1.position - body2.position;
+            double dr = deltaRVector.length();
+            // Calculate the force and potential energy here (!!!!!)
+            vec3 force = (G*body1.mass*body2.mass/(dr*dr*dr))*(1 +  3*l_squared/(c_squared*r_squared))*deltaRVector;
+            body1.force += force;
+            body2.force -= force;
+
+            m_potentialEnergy += G*body1.mass*body2.mass/dr; // Supposed to be negative?
+        }
+
+        m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
+    }
+    */
+
     //  Calculating potential and kinetic energy
     CelestialBody &sun = m_bodies[0];
     CelestialBody &mercury = m_bodies[1];
@@ -67,12 +93,14 @@ void SolarSystem::calculateForcesAndEnergy_relCorr()
     vec3 deltaRVector = mercury.position - sun.position;
     double dr = deltaRVector.length();
     // Calculate the force and potential energy here (!!!!!)
-    vec3 force = (G*mercury.mass*sun.mass/(dr*dr*dr))*(1 +  3*l_squared/(c_squared*r_squared))*deltaRVector; //G*.mass*body2.mass/(dr*dr*dr) * deltaRVector;
+    vec3 force = (G*mercury.mass*sun.mass/(dr*dr*dr))*(1 +  3*l_squared/(c_squared*r_squared))*deltaRVector;
     mercury.force += force;
     sun.force -= force;
 
+
     m_potentialEnergy += G*mercury.mass*sun.mass/dr;; // Supposed to be negative?
     m_kineticEnergy += 0.5*mercury.mass*mercury.velocity.lengthSquared();
+
 }
 
 
@@ -110,7 +138,25 @@ void SolarSystem::writeToFile(string filename)
     m_file <<  numberOfBodies() << endl;
     m_file << "Celestialbody1, Celestialbody2,...." << endl;
     for(CelestialBody &body : m_bodies) {
-        m_file << "1 " << body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
+        m_file << "1 " << setprecision(15) <<  body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
+    }
+}
+
+void SolarSystem::writeToFile_rel(string filename)
+{
+    if(!m_file.good()) {
+        m_file.open(filename.c_str(), ofstream::out);
+        if(!m_file.good()) {
+            cout << "Error opening file " << filename << ". Aborting!" << endl;
+            terminate();
+        }
+    }
+    m_file <<  numberOfBodies() << endl;
+    m_file << "Celestialbody1, Celestialbody2,...." << endl;
+
+    for(CelestialBody &body : m_bodies) {
+
+        m_file << "1 " << setprecision(15) <<  body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
     }
 }
 
@@ -123,3 +169,6 @@ std::vector<CelestialBody> &SolarSystem::bodies()
 {
     return m_bodies;
 }
+
+
+
