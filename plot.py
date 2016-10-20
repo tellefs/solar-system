@@ -60,13 +60,15 @@ def plot_mercury(file):
 	for k in range(1, numberOfPlanets+1):
 		extract_plot_planet_xy(k, numberOfPlanets, n, planets)
 	
-"""
-with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile:
+with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/positions.dat", "r") as infile:
 
 	plot_solarsystem(infile)
 	plt.show()
+
 """
-with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/mercury_system.dat", "r") as infile:
+with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/positions_earth_sun_jup.dat", "r") as infile:
 
 	plot_mercury(infile)
+	plt.axis("equal")
 	plt.show()
+"""
