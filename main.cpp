@@ -79,7 +79,7 @@ int main(int numArguments, char **arguments)
     // Three body problem
     cout << "Earth-Jupiter-Sun system: " << endl;
     SolarSystem threebody;
-    double jupiter_factor = 10.;
+    double jupiter_factor = 1.;
     threebody.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
     threebody.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,

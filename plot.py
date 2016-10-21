@@ -33,6 +33,7 @@ def plot_solarsystem(file):
 	ax.set_xlim3d(-2,2)
 	ax.set_ylim3d(-2,2)
 	ax.set_zlim3d(-2,2)
+
 """
 #with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/positions.dat", "r") as infile:
 with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile: #for tellef
