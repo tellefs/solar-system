@@ -19,6 +19,7 @@ public:
     double potentialEnergy() const;
     double potentialEnergy_mercury() const;
     double kineticEnergy() const;
+    void printEnergy() const;
     void writeToFile(std::string filename);
     void writeToFile_rel(std::string filename);
     vec3 angularMomentum() const;
@@ -31,6 +32,7 @@ private:
     double m_kineticEnergy;
     double m_potentialEnergy;
     double m_potentialEnergy_mercury;
+    double m_totalEnergy;
 };
 
 #endif // SOLARSYSTEM_H

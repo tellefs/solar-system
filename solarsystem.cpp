@@ -7,7 +7,8 @@ using namespace std;
 
 SolarSystem::SolarSystem() :
     m_kineticEnergy(0),
-    m_potentialEnergy(0)
+    m_potentialEnergy(0),
+    m_totalEnergy(0)
 {}
 
 
@@ -20,6 +21,7 @@ void SolarSystem::calculateForcesAndEnergy()
 {
     m_kineticEnergy = 0;
     m_potentialEnergy = 0;
+    m_totalEnergy = 0;
     m_angularMomentum.zeros();
 
     for(CelestialBody &body : m_bodies) {
@@ -41,10 +43,13 @@ void SolarSystem::calculateForcesAndEnergy()
             body2.force -= force;
 
             m_potentialEnergy += G*body1.mass*body2.mass/dr; // Supposed to be negative?
+            m_angularMomentum += body1.position.cross(body1.velocity);
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
+        m_totalEnergy = m_kineticEnergy + m_potentialEnergy;
     }
+
 }
 
 void SolarSystem::calculateForcesAndEnergy_relCorr()
@@ -123,6 +128,11 @@ double SolarSystem::potentialEnergy() const
 double SolarSystem::kineticEnergy() const
 {
     return m_kineticEnergy;
+}
+
+void SolarSystem::printEnergy() const
+{
+    cout << "Total energy, kinetic energy, potential energy: " << m_totalEnergy << " " << m_kineticEnergy << " " << m_potentialEnergy << endl;
 }
 
 void SolarSystem::writeToFile(string filename)

@@ -138,13 +138,32 @@ An introduction.
 \section{\label{sec:The}Theory and methods}
 
 \subsection{\label{sec:New}Newton's law of gravitation}
-Newton's law of gravitation states for two objects of mass $m_1$ and $m_2$, the force on object 1 from object 2 is given by \footnote{All theory in this project adapted from FYS3150 Project 3 (Fall 2016) $\href{link}{linkname}$}
+Newton's law of gravitation states for two objects of mass $m_1$ and $m_2$, the force on object 1 from object 2 is given by \footnote{All theory in this project adapted from FYS3150 Project 3 (Fall 2016) $\href{link}{linkname}$},
 
 \begin{equation}
-	\bm{F} = \frac{Gm_1 m_2}{r^2} \bm{u_r} = \frac{Gm_1 m_2}{r^3} \bm{r}
+	\bm{F_{1,2}} = \frac{Gm_1 m_2}{r^2} \bm{u_r} = \frac{Gm_1 m_2}{r^3} \bm{r}
 \end{equation}
 
-where $G$ is the gravitational constant and $\bm{r}$ is a radial vector pointing at object 2. $r = \left|\bm{r}\right| $ is the distance and $\bm{u_r} = \bm{r}/r$ is a radial unit vector.
+where $G$ is the gravitational constant and $\bm{u_r} = \bm{r}/r$ is a radial unit vector. $\bm{r}$ is a radial vector pointing at object 2 and $r = \left|\bm{r}\right| $ is the distance. Newton's third law gives us that the force on object 2 from object 1 is $\bm{F_{2,1}} = - \bm{F_{1,2}}$. Newton's third law gives us the differential equation governing the motion of object 1
+
+\begin{equation}
+	\bm{\ddot{r(t)}} = \bm{a(t)} = \bm{F_{1,2}}(t, \bm{r(t)})/m_1,
+\end{equation}
+
+where $\bm{a}$ is the acceleration, and we can solve this equation to find the motion $\bm{r(t)}$. For a two-body system this equation will produce closed elliptical orbits around a common center of mass.\\
+If we assume that the orbit of object 2 around object 1 is circular we know that the force obeys the following equation
+
+\begin{equation}
+	F_{2,1} = \frac{Gm_1 m_2}{r^2} = \frac{m_1 v_{1}^{2}}{r},
+\end{equation}
+
+which implies that
+
+\begin{equation}
+	v_{1}^{2}r = G m_2.
+\end{equation}
+
+Introducing 1 AU $= 1.5\cdot10^{11}$m
 
 
 % \begin{widetext}	% Write a matrix of some kind

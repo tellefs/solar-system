@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <stdlib.h>
+#include <ctime>
 #include "solarsystem.h"
 #include "euler.h"
 #include "verlet.h"
@@ -11,21 +12,104 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e8; // numTimesteps*dt = years
+    int numTimesteps = 1e6; // numTimesteps*dt = years
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = years/numTimesteps;
     double sun_mass = 1.989e30;
     double AUday_to_AUyear = 365.242199;
+    double t_elapsed;  
+    double pi = M_PI;
+    double G = 4*pi*pi;
 
-    /*
 
+    // Circular orbit
+    cout << "Earth-Sun system: " << endl;
+    SolarSystem earthSun;
+    earthSun.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
+    earthSun.createCelestialBody( vec3(1,0,0),
+                                     vec3(0,2*pi,0),
+                                     (6e24)/sun_mass)
+                                    ; //earth,  init. conditions for pos and vel retrieved from NASA october 5. 2016
+    earthSun.calculateForcesAndEnergy();
+    earthSun.printEnergy();
+    cout << "Total angular momentum: " << earthSun.angularMomentum() << endl;
+    earthSun.writeToFile("positions_earth_sun.dat");   // initial position
+
+    clock_t start = clock();
+    // Euler integrator(dt);
+    Verlet integrator(dt);
+    for(int timestep=0; timestep<numTimesteps; timestep++) {
+        integrator.integrateOneStep(earthSun, false);
+        earthSun.writeToFile("positions_earth_sun.dat");
+    }
+    clock_t finish = clock();
+    t_elapsed = double(finish - start) / CLOCKS_PER_SEC;
+    earthSun.printEnergy();
+    cout << "Total angular momentum: " << earthSun.angularMomentum() << endl;
+    cout << "time elapsed: " << t_elapsed << endl;
+
+
+    // Escape velocity
+    cout << "Earth-Sun (escape) system: " << endl;
+    SolarSystem earthSun2;
+    earthSun2.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
+    earthSun2.createCelestialBody( vec3(1,0,0),
+                                     vec3(0,sqrt(8)*pi,0),
+                                     (6e24)/sun_mass)
+                                    ; //earth,  init. conditions for pos and vel retrieved from NASA october 5. 2016
+    earthSun2.calculateForcesAndEnergy();
+    earthSun2.printEnergy();
+    cout << "Total angular momentum: " << earthSun2.angularMomentum() << endl;
+    earthSun2.writeToFile("positions_earth_sun_esc.dat");   // initial position
+
+    clock_t start1 = clock();
+    //Verlet integrator(dt);
+    for(int timestep=0; timestep<numTimesteps; timestep++) {
+        integrator.integrateOneStep(earthSun2, false);
+        earthSun2.writeToFile("positions_earth_sun_esc.dat");
+    }
+    clock_t finish1 = clock();
+    t_elapsed = double(finish1 - start1) / CLOCKS_PER_SEC;
+    earthSun2.printEnergy();
+    cout << "Total angular momentum: " << earthSun2.angularMomentum() << endl;
+    cout << "time elapsed: " << t_elapsed << endl;
+
+
+    // Three body problem
+    cout << "Earth-Jupiter-Sun system: " << endl;
+    SolarSystem threebody;
+    double jupiter_factor = 1e2;
+    threebody.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
+    threebody.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
+                                     vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,
+                                     (6e24)/sun_mass)
+                                    ; //earth,  init. conditions for pos and vel retrieved from NASA october 5. 2016
+
+    threebody.createCelestialBody(vec3(-5.433468170028908E+00, -3.819061221110369E-01, 1.231004384238452E-01),
+                                     vec3(4.425651679847022E-04, -7.171108917491057E-03, 1.992744446163222E-05)*AUday_to_AUyear,
+                                     jupiter_factor*(1e27)/sun_mass); //jupiter
+    threebody.calculateForcesAndEnergy();
+    threebody.writeToFile("positions_earth_sun_jup.dat");   // initial position
+
+    clock_t start2 = clock();
+    //Verlet integrator(dt);
+    for(int timestep=0; timestep<numTimesteps; timestep++) {
+        integrator.integrateOneStep(threebody, false);
+        threebody.writeToFile("positions_earth_sun_jup.dat");
+    }
+    clock_t finish2 = clock();
+    t_elapsed = double(finish2 - start2) / CLOCKS_PER_SEC;
+    cout << "time elapsed: " << t_elapsed << endl;
+
+
+    cout << "Full solar system:" << endl;
     SolarSystem solarSystem;
     // We create new bodies like this. Note that the createCelestialBody function returns a reference to the newly created body
     // This can then be used to modify properties or print properties of the body if desired
     // Use with: solarSystem.createCelestialBody( position, velocity, mass );
 
-    CelestialBody &sun = solarSystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
+    // CelestialBody &sun = solarSystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
 
     // We don't need to store the reference, but just call the function without a left hand side
     // now i need my planets
@@ -65,7 +149,19 @@ int main(int numArguments, char **arguments)
 
     solarSystem.createCelestialBody(vec3(9.393096450667111E+00, -3.182064102580347E+01, 6.879522592437006E-01),
                                      vec3(3.065499934972441E-03, 2.293283900283695E-04, -9.119583887771224E-04)*AUday_to_AUyear,
-                                     (1.303e22)/sun_mass); //pluto
+                                    (1.303e22)/sun_mass); //pluto
+
+
+    vec3 sunVelocity;
+    // To get a list (a reference, not copy) of all the bodies in the solar system, we use the .bodies() function
+    vector<CelestialBody> &bodies = solarSystem.bodies();
+    // Give the position and velocity of objects
+    for(int i = 0; i<bodies.size(); i++) {
+        CelestialBody &body = bodies[i]; // Reference to this body
+        sunVelocity += body.mass*body.velocity;
+    }
+    sunVelocity /= sun_mass;
+    solarSystem.createCelestialBody( vec3(0,0,0), sunVelocity, 1.0 );
 
 
 //  // Create some random celestial objects
@@ -103,24 +199,26 @@ int main(int numArguments, char **arguments)
 //        cout << "The position of this object is " << body.position << " with velocity " << body.velocity << endl;
 //    }
 
+
+    solarSystem.calculateForcesAndEnergy();
     solarSystem.writeToFile("positions.dat");   // initial position
     // Euler integrator(dt);
-    Verlet integrator(dt);
+    // Verlet integrator(dt);
+    // Verlet integrator(dt);
     bool relCorr = false;
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(solarSystem, relCorr);
         solarSystem.writeToFile("positions.dat");
-        if (timestep % 1000 == 0 ) {
-            cout << solarSystem.totalEnergy() << endl;
-        }
     }
-    cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
+    //cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
-    */
 
     // Mercury perihelion precession
 
+
     //Classical
+
+    cout << "Classical Mercury system: " << endl;
 
     SolarSystem mercurySystem;  // classical
 
@@ -139,7 +237,7 @@ int main(int numArguments, char **arguments)
                                      vec3(0, 12.44, 0),
                                      (3.285e23)/sun_mass);    //mercury
 
-    Verlet integrator(dt);
+    //Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(mercurySystem, false);
         double r = (mercurySystem.bodies().at(0).position - mercurySystem.bodies().at(1).position).length();
@@ -156,14 +254,17 @@ int main(int numArguments, char **arguments)
 
         if(threePositions_class[0] > threePositions_class[1] && threePositions_class[2] > threePositions_class[1]){
             outFile << threeTheta_class[1] << endl;
-            cout<< threeTheta_class[1] <<endl;
+            //cout<< threeTheta_class[1] <<endl;
         }
     }
+
     outFile.close();
-    cout << "I just created a solar system that has " << mercurySystem.bodies().size() << " objects." << endl;
+    //cout << "I just created a solar system that has " << mercurySystem.bodies().size() << " objects." << endl;
+
 
     // Relative correction
 
+    cout << "Gen rel Mercury system: " << endl;
     SolarSystem mercurySystem_rel;
 
     mercurySystem_rel.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );     // sun
@@ -196,14 +297,18 @@ int main(int numArguments, char **arguments)
         threeTheta_rel[1] = threeTheta_rel[2];
         threeTheta_rel[2] = theta;
 
+        ofstream outFile;
+        outFile.open("theta_rel.dat", ofstream::app);
+
         if(threePositions_rel[0] > threePositions_rel[1] && threePositions_rel[2] > threePositions_rel[1]){
             outFileRel << threeTheta_rel[1] << endl;
-            cout<< threeTheta_rel[1] <<endl;
+            //cout<< threeTheta_rel[1] <<endl;
         }
     }
+
     outFileRel.close();
 
-    cout << "I just created a solar system that has " << mercurySystem_rel.bodies().size() << " objects." << endl;
-
+    //cout << "I just created a solar system that has " << mercurySystem_rel.bodies().size() << " objects." << endl;
+    cout<<"good job"<<endl;
     return 0;
 }

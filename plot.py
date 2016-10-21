@@ -18,7 +18,7 @@ def extract_plot_planet(planet_number, numberOfPlanets, n, planets, figure):
 	r_planet = np.zeros((n,4))
 	for i in range(n-1):
 		r_planet[i] = np.asarray(planets[planet_number][i].split()).astype(float)
-	figure.plot(r_planet[0:-1,1],r_planet[0:-1,2],r_planet[0:-1,3], label="balle")
+	figure.plot(r_planet[0:-1,1],r_planet[0:-1,2],r_planet[0:-1,3], label="pikkogballe")
 
 def plot_solarsystem(file):
 	mpl.rcParams['legend.fontsize'] = 10
@@ -33,47 +33,14 @@ def plot_solarsystem(file):
 	ax.set_ylim3d(-2,2)
 	ax.set_zlim3d(-2,2)
 
-#functions to plot mercury in 2D 
-
-def extract_plot_planet_xy(planet_number, numberOfPlanets, n, planets):
-	r_planet = np.zeros((n,4))
-	for i in range(n-1):
-		r_planet[i] = np.asarray(planets[planet_number][i].split()).astype(float)
-	plt.plot(r_planet[0:-1,1],r_planet[0:-1,2])
-	plt.axis([-.5, .5, -.5, .5])
-
-def plot_mercury(file):
-
-	numberOfPlanets, n, planets = read_planets(file)
-	for k in range(1, numberOfPlanets+1):
-		extract_plot_planet_xy(k, numberOfPlanets, n, planets)
-	
-"""
+#with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/positions.dat", "r") as infile:
 with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile: #for tellef
 
 	plot_solarsystem(infile)
 	plt.show()
-"""
 
-"""
-with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit--Debug/positions.dat", "r") as infile: #for andreas
 
-	plot_solarsystem(infile)
-	plt.show()
-"""
 
-"""
-with open("../build-SolarSystem-Desktop-Debug/mercury_system.dat", "r") as infile: #for tellef
-	plot_mercury(infile)
-	plt.show()
-"""
-
-"""
-with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/mercury_system.dat", "r") as infile: #for andreas
-
-	plot_mercury(infile)
-	plt.show()
-"""
 def perhelionPrecision(file):
 	infile = open(file, 'r')
 	theta = []
@@ -96,10 +63,7 @@ plt.ylabel('$\Theta_P$ [arcsec]')
 plt.legend()
 plt.show()
 
+
 print "observed perhelion precision, theta_p[diff between rel and class] = ", abs(theta_rel[-1] - theta_class[-1]), "arcsec."
-
-	
-
-
 
 
