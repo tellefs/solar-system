@@ -12,10 +12,10 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e6; // numTimesteps*dt = years
+    int numTimesteps = 1e5; // numTimesteps*dt = years
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
-    double dt = years/numTimesteps;
+    double dt = 0.1; //years/numTimesteps;
     double sun_mass = 1.989e30;
     double AUday_to_AUyear = 365.242199;
     double t_elapsed;  
@@ -79,7 +79,7 @@ int main(int numArguments, char **arguments)
     // Three body problem
     cout << "Earth-Jupiter-Sun system: " << endl;
     SolarSystem threebody;
-    double jupiter_factor = 1e2;
+    double jupiter_factor = 10.;
     threebody.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
     threebody.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,
@@ -204,7 +204,6 @@ int main(int numArguments, char **arguments)
     solarSystem.writeToFile("positions.dat");   // initial position
     // Euler integrator(dt);
     // Verlet integrator(dt);
-    // Verlet integrator(dt);
     bool relCorr = false;
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(solarSystem, relCorr);
@@ -212,11 +211,13 @@ int main(int numArguments, char **arguments)
     }
     //cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
-
+    /*
     // Mercury perihelion precession
 
 
     //Classical
+
+    clock_t start3 = clock();
 
     cout << "Classical Mercury system: " << endl;
 
@@ -237,7 +238,7 @@ int main(int numArguments, char **arguments)
                                      vec3(0, 12.44, 0),
                                      (3.285e23)/sun_mass);    //mercury
 
-    //Verlet integrator(dt);
+    Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(mercurySystem, false);
         double r = (mercurySystem.bodies().at(0).position - mercurySystem.bodies().at(1).position).length();
@@ -254,7 +255,7 @@ int main(int numArguments, char **arguments)
 
         if(threePositions_class[0] > threePositions_class[1] && threePositions_class[2] > threePositions_class[1]){
             outFile << threeTheta_class[1] << endl;
-            //cout<< threeTheta_class[1] <<endl;
+            cout<< threeTheta_class[1] <<endl;
         }
     }
 
@@ -297,18 +298,22 @@ int main(int numArguments, char **arguments)
         threeTheta_rel[1] = threeTheta_rel[2];
         threeTheta_rel[2] = theta;
 
-        ofstream outFile;
-        outFile.open("theta_rel.dat", ofstream::app);
-
         if(threePositions_rel[0] > threePositions_rel[1] && threePositions_rel[2] > threePositions_rel[1]){
             outFileRel << threeTheta_rel[1] << endl;
-            //cout<< threeTheta_rel[1] <<endl;
+            cout<< threeTheta_rel[1] <<endl;
         }
     }
 
     outFileRel.close();
 
     //cout << "I just created a solar system that has " << mercurySystem_rel.bodies().size() << " objects." << endl;
+
+    clock_t finish3 = clock();
+    t_elapsed = double(finish3 - start3) / CLOCKS_PER_SEC;
+    cout << "time elapsed: " << t_elapsed << endl;
+
+    */
+
     cout<<"good job"<<endl;
     return 0;
 }
