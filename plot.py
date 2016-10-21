@@ -74,66 +74,31 @@ with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/mercury_syste
 	plot_mercury(infile)
 	plt.show()
 """
-
 def perhelionPrecision(file):
-	numberOfPlanets, n, planets = read_planets(file)
-	r_planet = np.zeros((n,4))
-	for k in range(1, numberOfPlanets+1):
-		for i in range(n-1):
-			r_planet[i] = np.asarray(planets[k][i].split()).astype(float)
+	infile = open(file, 'r')
+	theta = []
+	for line in infile:
+		values = float(line.split()[0])
+		theta.append(values)
 
-	x_pos = r_planet[0:-1,1]
-	y_pos = r_planet[0:-1,2]
-	N = len(x_pos)
-
-	distToSun = np.zeros(N)
-	
-	for i in range(N):
-		distToSun[i] = np.linalg.norm([x_pos[i], y_pos[i]])
-	
-	time = np.linspace(0, N, N)
-	plt.plot(time, distToSun)
-	
-	localMinIndex = argrelextrema(distToSun, np.less)[0]
-	N_new = len(localMinIndex)
-
-	localMinPlot = np.zeros(N_new)
-	for i in range(N_new):
-		k = localMinIndex[i]
-		localMinPlot[i] = distToSun[k]
-	plt.plot(localMinIndex, localMinPlot, 'ro')
-
-	plt.show()
-
-	theta = np.zeros(N_new)
-	
-	for i in range(N_new):
-		k = localMinIndex[i]
-		theta[i] = np.arctan2(x_pos[k],y_pos[k])*(360*3600)/(2*np.pi)
-	
-	time = np.linspace(0, 100, N_new)
-	
+	n = len(theta)
+	time = np.linspace(0, 100, n)
 
 	return time, theta
-	
 
+time_rel, theta_rel = perhelionPrecision('../build-SolarSystem-Desktop-Debug/theta_rel.dat')
+time_class, theta_class = perhelionPrecision('../build-SolarSystem-Desktop-Debug/theta_class.dat')
 
-with open("../build-SolarSystem-Desktop-Debug/mercury_system_class.dat", "r") as infile:
-
-	time, theta_class = perhelionPrecision(infile)
-
-
-with open("../build-SolarSystem-Desktop-Debug/mercury_system_rel.dat", "r") as infile:
-
-	time, theta_rel = perhelionPrecision(infile)
-
-
-plt.plot(time, theta_rel, label='rel', color='r')
-plt.plot(time, theta_class, label='class', color='b')
+plt.plot(time_rel, theta_rel, 'r', label='relativistic correction')
+plt.plot(time_class, theta_class, 'b', label='classical mechanics')
+plt.xlabel('time [years]')
+plt.ylabel('$\Theta_P$ [arcsec]')
 plt.legend()
-plt.xlabel('time')
-plt.ylabel('arcsec')
 plt.show()
+
+print "observed perhelion precision, theta_p[diff between rel and class] = ", abs(theta_rel[-1] - theta_class[-1]), "arcsec."
+
+	
 
 
 

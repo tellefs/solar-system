@@ -11,10 +11,14 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e5; // numTimesteps*dt = years
+    int numTimesteps = 1e8; // numTimesteps*dt = years
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = years/numTimesteps;
+    double sun_mass = 1.989e30;
+    double AUday_to_AUyear = 365.242199;
+
+    /*
 
     SolarSystem solarSystem;
     // We create new bodies like this. Note that the createCelestialBody function returns a reference to the newly created body
@@ -25,15 +29,12 @@ int main(int numArguments, char **arguments)
 
     // We don't need to store the reference, but just call the function without a left hand side
     // now i need my planets
-    double sun_mass = 1.989e30;
-    double AUday_to_AUyear = 365.242199;
 
     solarSystem.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,
                                      (5.972e24)/sun_mass)
                                     ; //earth,  init. conditions for pos and vel retrieved from NASA october 5. 2016
 
-    /*
     solarSystem.createCelestialBody(vec3(-5.433468170028908E+00, -3.819061221110369E-01, 1.231004384238452E-01),
                                      vec3(4.425651679847022E-04, -7.171108917491057E-03, 1.992744446163222E-05)*AUday_to_AUyear,
                                      (1.898e27)/sun_mass); //jupiter
@@ -65,7 +66,7 @@ int main(int numArguments, char **arguments)
     solarSystem.createCelestialBody(vec3(9.393096450667111E+00, -3.182064102580347E+01, 6.879522592437006E-01),
                                      vec3(3.065499934972441E-03, 2.293283900283695E-04, -9.119583887771224E-04)*AUday_to_AUyear,
                                      (1.303e22)/sun_mass); //pluto
-    */
+
 
 //  // Create some random celestial objects
 //    for (int i=0; i<300; i++){
@@ -107,31 +108,61 @@ int main(int numArguments, char **arguments)
     Verlet integrator(dt);
     bool relCorr = false;
     for(int timestep=0; timestep<numTimesteps; timestep++) {
-        /*integrator.integrateOneStep(solarSystem, relCorr);
+        integrator.integrateOneStep(solarSystem, relCorr);
         solarSystem.writeToFile("positions.dat");
         if (timestep % 1000 == 0 ) {
             cout << solarSystem.totalEnergy() << endl;
-        }*/
+        }
     }
     cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
+    */
 
     // Mercury perihelion precession
 
+    //Classical
+
     SolarSystem mercurySystem;  // classical
+
+    vec3 threePositions_class(0, 0, 0);
+    vec3 threeTheta_class(0,0,0);
+
+    ofstream outFile;
+    outFile.open("theta_class.dat");
+    if(!outFile.is_open()) {
+        cout << "Could not open file" << endl;
+        exit(1);
+    }
 
     mercurySystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );     // sun
     mercurySystem.createCelestialBody(vec3(0.3075, 0, 0),
                                      vec3(0, 12.44, 0),
                                      (3.285e23)/sun_mass);    //mercury
 
-    mercurySystem.writeToFile("mercury_system_class.dat");    // initial position
+    Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(mercurySystem, false);
-        mercurySystem.writeToFile("mercury_system_class.dat");
+        double r = (mercurySystem.bodies().at(0).position - mercurySystem.bodies().at(1).position).length();
+
+        threePositions_class[0] = threePositions_class[1];
+        threePositions_class[1] = threePositions_class[2];
+        threePositions_class[2] = r;
+
+        double theta = atan2(mercurySystem.bodies().at(1).position.y(), mercurySystem.bodies().at(1).position.x())*(360*3600)/(2* M_PI );
+
+        threeTheta_class[0] = threeTheta_class[1];
+        threeTheta_class[1] = threeTheta_class[2];
+        threeTheta_class[2] = theta;
+
+        if(threePositions_class[0] > threePositions_class[1] && threePositions_class[2] > threePositions_class[1]){
+            outFile << threeTheta_class[1] << endl;
+            cout<< threeTheta_class[1] <<endl;
+        }
     }
+    outFile.close();
     cout << "I just created a solar system that has " << mercurySystem.bodies().size() << " objects." << endl;
 
+    // Relative correction
 
     SolarSystem mercurySystem_rel;
 
@@ -140,40 +171,37 @@ int main(int numArguments, char **arguments)
                                      vec3(0, 12.44, 0),
                                      (3.285e23)/sun_mass);    //mercury
 
-    vec3 threePositions(0, 0, 0);
-    vec3 threeTheta(0,0,0);
+    vec3 threePositions_rel(0, 0, 0);
+    vec3 threeTheta_rel(0,0,0);
 
-    mercurySystem_rel.writeToFile("mercury_system_rel.dat");    // initial position
+    ofstream outFileRel;
+    outFileRel.open("theta_rel.dat");
+    if(!outFileRel.is_open()) {
+        cout << "Could not open file" << endl;
+        exit(1);
+    }
 
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(mercurySystem_rel, true);
 
         double r = (mercurySystem_rel.bodies().at(0).position - mercurySystem_rel.bodies().at(1).position).length();
 
-        threePositions[0] = threePositions[1];
-        threePositions[1] = threePositions[2];
-        threePositions[2] = r;
+        threePositions_rel[0] = threePositions_rel[1];
+        threePositions_rel[1] = threePositions_rel[2];
+        threePositions_rel[2] = r;
 
         double theta = atan2(mercurySystem_rel.bodies().at(1).position.y(), mercurySystem_rel.bodies().at(1).position.x())*(360*3600)/(2* M_PI );
 
-        threeTheta[0] = threeTheta[1];
-        threeTheta[1] = threeTheta[2];
-        threeTheta[2] = theta;
+        threeTheta_rel[0] = threeTheta_rel[1];
+        threeTheta_rel[1] = threeTheta_rel[2];
+        threeTheta_rel[2] = theta;
 
-        ofstream outFile;
-        outFile.open("theta_rel.dat", ofstream::app);
-        outFile << setprecision(15) << 0 << endl;
-        if(threePositions[0] > threePositions[1] && threePositions[2] > threePositions[1]){
-            //writing to file
-            outFile <<7.6 << endl;
-            cout<<threeTheta[1]<<endl;
-
+        if(threePositions_rel[0] > threePositions_rel[1] && threePositions_rel[2] > threePositions_rel[1]){
+            outFileRel << threeTheta_rel[1] << endl;
+            cout<< threeTheta_rel[1] <<endl;
         }
-        outFile.close();
-
-
-        mercurySystem_rel.writeToFile("mercury_system_rel.dat");
     }
+    outFileRel.close();
 
     cout << "I just created a solar system that has " << mercurySystem_rel.bodies().size() << " objects." << endl;
 
