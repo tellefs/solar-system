@@ -263,6 +263,29 @@ From vector calculus we find for circular motion that $\bm{r} \perp \bm{v}$, and
 As the velocity is constantly changing, the vector momentum $m\bm{v}$ is not conserved. The scalar quantity $mv$ is however (as speed is constant).\\
 The speed $v = \left|\bm{v} \right|$ is easily obtained for the Earth-sun system, $v = 2\pi r/T = 2\pi AU/yr$.
 
+\subsection{\label{sec:Thi} Mercury's perihelion precision}
+
+In classical mechanics, using Newtons law of gravity, we will get closed elliptical orbits for a planet moving around the sun. The perihelion-position (the point where the planet is closest to the sun) for the planet will appear at the same place every orbit. In real life, this does not happen. What we see is that the perihelion-position will move slightly for every orbit for a planet around the sun. There are different factors in the universe that causes this to happen. One factor is the theory of relativity. \\
+The perihelion-precision is the difference between the postulated classical and the observed movement of the perihelion-position. When subtracting all factors that causes the shift of the perihelion-position except for the theory of relativity, the value of the perihelion precision is $43''$ per century. \footnote{See M.H. Jensen, Computational Physics: Project 3, fall semester 2016, available at $\href{https://github.com/CompPhysics/ComputationalPhysics/blob/master/doc/Projects/2016/Project3/pdf/Project3.pdf}{link}$}
+\\\\
+When simulating this in our project, we add a relativistic correction to the classical force, so we get
+\begin{equation}
+F_{1,2} = \frac{GM_1M_2}{r^2}\bigg[ 1 + \frac{3l^2}{r^2c^2}\bigg]
+\end{equation}
+
+where $l = |\vec{r} \times \vec{v}|$ is the magnitude of the planets orbital angular momentum per unit mass and $c$ is the speed of light in vacuum. We looked at a simulation of Mercury and the sun for a century, and found all the perihelion-positions. We could then calculate the angle $\theta_p$ by 
+\begin{equation}
+\tan \theta_p = \frac{y_p}{x_p} \Rightarrow \theta_p = \arctan(\frac{y_p}{x_p})
+\end{equation}
+
+where $y_p$ and $x_p$ are the $x$ and $y$ coordinates at the perihelion. The perihelion precision is then given by
+
+\begin{equation}
+\theta_{p, classical} - \theta_{p, relativistic}
+\end{equation}
+
+
+
 \subsection{Object Orientation}
 A object oriented approach to our problem in short allows us to write the code once, and use it many times \footnote{See also FYS3150 Lecture Notes, Object Orientation (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/pub/oo/pdf/oo-print.pdf}{link}$}.
 As we are interested in celestial objects characterized by their position, velocity and mass; a class based approach lets us easily implement the properties and interactions of each celestial object in the solar system. In addition, it makes it quite easy to extend the code to include and calculate other properties such as the force on a single object or the total angular momentum of the system. We can also include other functionality such as writing to file or choosing the method of numerical integration without interfering with other parts of the code.
@@ -271,7 +294,7 @@ As we are interested in celestial objects characterized by their position, veloc
 \subsection{\label{sec:Uni}Testing}
 As mentioned above, we have several conserved quantities to consider as we evolve our system in time. A test of whether the total energy of the solar system is conserved in time, or whether the angular momentum of a circular orbit remains zero at all times, is a good check to make sure our calculations are correct and sufficiently precise.
 
-
+%\footnote{See M.H. Jensen, Computational Physics: Lecture Notes Fall 2015, ch. x.y, available at $\href{link}{linkname}$}
 % A reference \footnote{See M.H. Jensen, Computational Physics: Lecture Notes Fall 2015, ch. x.y, available at $\href{link}{linkname}$}
 
 
@@ -293,8 +316,34 @@ An equation reference % \eqref{eq:x}
 % \end{table}
 
 
-\subsection{\label{sec:Sub2}Second subpart}
-More text.
+\subsection{\label{sec:Sub2}Mercury's perihelion precision}
+
+In this project we looked at Mercury's perihelion-precision. We then added a relativistic correction to the force (equation 6) and compared the angle at perihelion (equation 7) to the situation with classical Newtonian gravitational force.\\
+To get the right precision in this part of the project it was crucial to have enough steps for integration. In Table 1 we have shown the time and the perihelion precision for two different numbers of integration-steps. The perihelion precision is calculated by Equation 8 for the $\theta_p$ values after a century.
+
+\begin{table}[h]
+\centering
+\caption{Perihelion precision for different timesteps}
+\label{my-label}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Integration steps $n$} & \textbf{Time {[}$s${]}} & \textbf{Perihelion precision {[}''{]}} \\ \hline
+$10^8$                 & $0.3$                   & $47.72$                                \\ \hline
+$10^5$                 & $234.3$                 & $165.0$                                \\ \hline
+\end{tabular}
+\end{table}
+
+
+We expected the perihelion-precision to be $43''$. For $n=10^8$ integration-steps we get an answer that is close enough to show that this is caused by relativistic correction. Also, if we were to to more integration-steps, our computers would spend too much time doing it.
+ In Figure (?) we have included a plot for Mercury's perihelion precision. From this we can see that the precision between the classical case and the relativistic case gets bigger as time goes by.
+% \begin{figure}[h]
+% \centering
+% \includegraphics[height=3.2in, width=0.5\textwidth]{perihelion_precision.png} \caption{Perihelion precision for Mercury around the sun for a century. The blue graph represent the classical case and the red graph represent the relativistic case. This is done with $n=10^8$ integrationsteps}
+% \end{figure}
+
+
+
+
 
 % \begin{figure*}[t!]	% a big figure
 %     \centering
