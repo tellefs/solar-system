@@ -110,7 +110,7 @@
              %  but any date may be explicitly specified
 
 \begin{abstract}
-An abstract
+In this project we use object orientation to model the solar system. We implement the solar system using a C++ class based approach, and solve the differential equations given by Newton's laws to obtain the full motion. We solve the discretized version of the differential equations using Euler's method and the Velocity Verlet method and compare the efficiency and numerical stability. We also check the accuracy of our results using physical laws such as conservation of energy and momentum. SOMETHING ABOUT RESULTS HERE!
 
 % \begin{description}
 % \item[Usage]
@@ -132,13 +132,14 @@ An abstract
 \maketitle
 
 \section{\label{sec:Int}Introduction}
-An introduction.
-
+In this project we apply the principles of Object Orientation to a system of several objects whose interactions are governed by the gravitational force. We study the solar system consisting simply of the Earth and the sun, and the full solar system consisting of all 8 planets in addition to Pluto and the sun. We model each celestial object as a point particle in 3-dimensional space, and Newton's laws give us a simple ordinary differential equation governing the time evolution of each celestial object. A class based approach in C++ allows us to easily extend the code to obtain the full motion of the solar system. We solve the differential equations numerically using a length and time scale appropriate for our problem. \\ \\
+In particular, we will be implementing Euler's method and the Velocity Verlet method. Before comparing the results, we will note that Euler's method, though simple, can be quite numerically unstable. The Velocity Verlet method is well suited to our problem, and gives a good tradeoff betweeen numerical efficiency and accuracy. \\ \\
+Finally we will examine the perihelion precession of Mercury. One of the early successes of the general theory of relativity was to explain the precession of Mercury as it orbited the sun, after all other pure newtonian effects had been accounted for. We will be modelling this by adding a relativistic correction, and checking to see whether this correction gives us an appropriate perturbation of the orbit.
 
 \section{\label{sec:The}Theory and methods}
 
 \subsection{\label{sec:New}Newton's law of gravitation}
-Newton's law of gravitation states for two objects of mass $m_1$ and $m_2$, the force on object 1 from object 2 is given by \footnote{All theory in this project adapted from FYS3150 Project 3 (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/Projects/2016/Project3/pdf/Project3.pdf}{link}$},
+Newton's law of gravitation states that for two objects of mass $m_1$ and $m_2$, the gravitational force on object 1 from object 2 is given by \footnote{All theory in this project adapted from FYS3150 Project 3 (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/Projects/2016/Project3/pdf/Project3.pdf}{link}$},
 
 \begin{equation}
 	\bm{F_{1,2}} = \frac{Gm_1 m_2}{r^2} \bm{u_r} = \frac{Gm_1 m_2}{r^3} \bm{r}
@@ -163,7 +164,7 @@ which implies that
 	v_{1}^{2}r = G m_2.
 \end{equation}
 
-Introducing 1 AU $= 1.5\cdot10^{11}$m; the distance from the Earth to the sun, we let object 1 be the Sun and object 2 the Earth, and we obtain
+Introducing 1 AU $= 1.5\cdot10^{11}$m; the distance from the Earth to the sun, we let object 1 be the sun and object 2 the Earth, and we obtain
 
 \begin{equation}
 	v_{earth}^2 r = G M_{\odot} = 4\pi^{2} AU^{3}/yr^{2},
@@ -231,7 +232,7 @@ If we wish to study our system from the gravitational center of mass at the orig
 \end{split}
 \end{equation}
 
-This gives us $N-1$ degrees of freedom to choose the initial positions and velocitites. We can then fullfill these conditions by requiring the Sun to have an initial position and velocity
+This gives us $N-1$ degrees of freedom to choose the initial positions and velocitites. We can then fullfill these conditions by requiring the sun to have an initial position and velocity
 
 \begin{equation}
 \begin{split}
@@ -247,7 +248,7 @@ For a system unaffected by external torque, the total angular momentum is conser
 	\bm{L_{tot}} = \sum_{i}{\bm{r_i} \times \bm{v_i}}
 \end{equation}
 
-Note that momentum, energy and angular momentum will constantly be exchanged between the objects of the system via the gravitational forces, and these conservation laws are only valid when examining the system as a whole. If we didn't model the celestial objects as point particles there could also be several extra degrees of freedom in which energy and momentum could be distributed, but this is negligeble for our purposes.
+Note that momentum, energy and angular momentum will constantly be exchanged between the objects of the system via the gravitational forces, and these conservation laws are only valid when examining the system as a whole. If we didn't model the celestial objects as point particles there could also be several extra degrees of freedom in which energy and momentum could be distributed, but this is negligible for our purposes.
 
 \subsection{\label{sec:Cel}Celestial mechanics}
 For a planet in orbit around a much more massive celestial object of mass $M$, we may find the escape velocity of the planet by finding the minimum kinetic energy required to move the planet infinitely far away. We thus acquire an analytical expression:
@@ -256,14 +257,20 @@ For a planet in orbit around a much more massive celestial object of mass $M$, w
 	v_{esc} = \sqrt{\frac{2GM}{r}}.
 \end{equation}
 
-When considering the Earth-Sun system this is simply $v_{esc} = \sqrt{8\pi^{2}}$, when expressed in $AU/yr$. \\ \\
+When considering the Earth-sun system this is simply $v_{esc} = \sqrt{8\pi^{2}}$, when expressed in $AU/yr$. \\ \\
 For a planet (mass $m$) in uniform circular orbit around a much more massive object of mass $M$ we have that the distance between the objects $r = $ constant. From equation \eqref{eq:10} this implies that the potential energy is a conserved quantity. By studying for example the expression for the centripetal acceleration $a = F(r)/m = v^{2}/r$ it is easy to see that the speed must be constant and therefore the kinetic energy must be conserved.\\
-From vector calculus we find that $\bm{r} \perp \bm{v}$, and from equation \eqref{eq:14} we obtain conservation of angular momentum.\\
+From vector calculus we find for circular motion that $\bm{r} \perp \bm{v}$, and from equation \eqref{eq:14} we obtain conservation of angular momentum.\\
 As the velocity is constantly changing, the vector momentum $m\bm{v}$ is not conserved. The scalar quantity $mv$ is however (as speed is constant).\\
-The speed $v = \left|\bm{v} \right|$ is easily obtained for the Earth-Sun system, $v = 2\pi r/T = 2\pi AU/yr$.
+The speed $v = \left|\bm{v} \right|$ is easily obtained for the Earth-sun system, $v = 2\pi r/T = 2\pi AU/yr$.
 
-\subsection{\label{sec:Uni}Unit testing}
-Text
+\subsection{Object Orientation}
+A object oriented approach to our problem in short allows us to write the code once, and use it many times \footnote{See also FYS3150 Lecture Notes, Object Orientation (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/pub/oo/pdf/oo-print.pdf}{link}$}.
+As we are interested in celestial objects characterized by their position, velocity and mass; a class based approach lets us easily implement the properties and interactions of each celestial object in the solar system. In addition, it makes it quite easy to extend the code to include and calculate other properties such as the force on a single object or the total angular momentum of the system. We can also include other functionality such as writing to file or choosing the method of numerical integration without interfering with other parts of the code.
+
+
+\subsection{\label{sec:Uni}Testing}
+As mentioned above, we have several conserved quantities to consider as we evolve our system in time. A test of whether the total energy of the solar system is conserved in time, or whether the angular momentum of a circular orbit remains zero at all times, is a good check to make sure our calculations are correct and sufficiently precise.
+
 
 % A reference \footnote{See M.H. Jensen, Computational Physics: Lecture Notes Fall 2015, ch. x.y, available at $\href{link}{linkname}$}
 
@@ -319,7 +326,7 @@ More text.
 
 
 \section{Conclusion}
-Do stuff.
+Object orientation makes this mostly easy. Weird flow of the exercices? Implement unit testing?
 
 \section{Appendix}
 All code used is available at: %\href{link}{linkname} \\
