@@ -299,9 +299,10 @@ As mentioned above, we have several conserved quantities to consider as we evolv
 
 
 \section{Results and discussion}
+In our final implementation it is somewhat difficult to make an assessment of the total number of floating points operations involved, and questionable if it would be of much use. This is because the program involves a large number of function calls, if tests, vector operations and recalculation of quantities. Some of these inefficiences might be alleviated by an intelligent compiler. We do however find that the time usage scales roughly linearly with the number of time steps $n$.
 
-\subsection{\label{sec:Sub1}First subpart}
-An equation reference % \eqref{eq:x}
+\subsection{\label{sec:Sub1}Earth-Sun system}
+
 
 % \begin{table}[h]	% a table
 % \centering
@@ -375,7 +376,7 @@ We expected the perihelion-precision to be $43''$. For $n=10^8$ integration-step
 
 
 \section{Conclusion}
-Object orientation makes this mostly easy. Weird flow of the exercices? Implement unit testing?
+Object orientation makes this mostly easy. Weird flow of the exercices? Implement unit testing? Inefficient IF tests? Time constraints?
 
 \section{Appendix}
 All code used is available at: %\href{link}{linkname} \\
