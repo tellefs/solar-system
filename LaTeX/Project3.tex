@@ -323,20 +323,20 @@ In our final implementation it is somewhat difficult to make an assessment of th
 
 We looked at a planet which started at a position $1AU$ from the sun, and we were to find its escape velocity. Using equation \ref{eq:escape_vel} we found that the escape velocity for the Earth-Sun system should be $v = \sqrt{8\pi^2}$. When doing this numerically, we started by using the exact escape velocity and multiplying this by numbers close to $1$ (see Figure \ref{fig:esc_vel})
 
- \begin{figure}[H]	% a big figure
-     \centering
-     \begin{subfigure}{0.5\textwidth}
-         \centering
-         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/0989vEsc.png}
-         \caption{}
-     \end{subfigure}
-     \begin{subfigure}{0.5\textwidth}
-         \centering
-         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/vEsc.png}
-         \caption{}
-     \end{subfigure} 
-     \caption{Eart-Sun system with Earth's escape-velocity}\label{fig:esc_vel}
- \end{figure}
+ % \begin{figure}[H]	% a big figure
+ %     \centering
+ %     \begin{subfigure}{0.5\textwidth}
+ %         \centering
+ %         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/0989vEsc.png}
+ %         \caption{}
+ %     \end{subfigure}
+ %     \begin{subfigure}{0.5\textwidth}
+ %         \centering
+ %         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/vEsc.png}
+ %         \caption{}
+ %     \end{subfigure} 
+ %     \caption{Eart-Sun system with Earth's escape-velocity}\label{fig:esc_vel}
+ % \end{figure}
  
  We can see that for the initial escape velocity we found theoretically, the planet does escape.
 As the figure shows, there is some numerical error here, since the planet also escapes with an initial value smaller than the theoretical escape-velocity.  
@@ -351,24 +351,11 @@ In Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} we have included three dimens
 
 \begin{figure}[H]
 \centering
-<<<<<<< HEAD
 \caption{Euler vs. Verlet method for y = 100 years}
 \label{eulVsVer}
-\begin{tabular}{@{}lllllll@{}}
-\hline
-                      & \textbf{Euler} &   &   & \textbf{Verlet} &   &   \\
-\hline
-$\Delta t$            & $10^{-2}$     & $10^{-3}$ & $10^{-4}$ & $10^{-2}$      & $10^{-3}$ & $10^{-4}$ \\
-$\Delta E_p/ E_{p,0}$ & 8.537e-1    & 6.567e-1 & 3.329e-1 &9.734e-4     & 9.870e-6 & 0 \\
-$\Delta E_k/E_{k,0}$  & 8.263e-1     & 6.570e-1 & 3.333e-1 & 9.334e-4      & 9.870e-4 & 0 \\
-$\Delta E/ E_0$       & 8.400e-1     & 6.569e-1 & 3.331e-1 & 2.042e-5      & 0 & 0 \\
-$\Delta L/L_0$         & 1.449e1     & 7.064e-1 & 2.240e-1     & 1.430e-3 & 0 \\ \hline
-time usage {[}s{]}    & 0.1362     & 1.391 & 14.66      & 0.1467 & 0
-\end{tabular}
-\end{table}
-=======
 \includegraphics[height=3.2in, width=0.5\textwidth]{plot/earth_sun_jupiter_mj1.png} \caption{The three-body problem where Jupiter is the red graph and the earth is the green. The motion of the sun can barely be seen as the blue graph.}\label{fig:plot/earth_sun_jupiter_mj1.png}
 \end{figure}
+
 
 The plot i Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$, we can clearly see that we have two unstable systems.
 
@@ -388,7 +375,6 @@ The plot i Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we wo
  \end{figure}
 
 We can also see this by looking at the conserved energy. For the system where we don't change Jupiter's mass, we get the change in energy
->>>>>>> 283c6196da46c7d90f841340b892c19176922030
 
 \begin{equation}
 \Delta_{E} = 2.0\times 10^{-8}
