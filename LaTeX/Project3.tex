@@ -300,24 +300,45 @@ As mentioned above, we have severial conserved quantities to consider as we evol
 
 
 \section{Results and discussion}
-In our final implementation it is somewhat difficult to make an assessment of the total number of floating points operations involved, and questionable if it would be of much use. This is because the program involves a large number of function calls, if tests, vector operations and recalculation of quantities. Some of these inefficiencies might be alleviated by an intelligent compiler. We do however find that the time usage scales roughly linearly with the number of time steps $n$.
+The masses of every planet is obtained from the table in project 3. The positions and velocities are obtained from NASA's website \url{http://ssd.jpl.nasa.gov/horizons.cgi#top} on 05.10.2016. \\
+
+In our final implementation it is somewhat difficult to make an assessment of the total number of floating points operations involved, and questionable if it would be of much use. This is because the program involves a large number of function calls, if tests, vector operations and recalculation of quantities. Some of these inefficiences might be alleviated by an intelligent compiler. We do however find that the time usage scales roughly linearly with the number of time steps $n$.
+
 
 
 
 \subsection{\label{sec:Sub1}Earth-Sun system}
 
+\subsection{\label{sec:Sub1}Earth-Sun system}
+We have already found an expression for the speed required for a stable circular orbit, equation \eqref{eq:16}. I tested the stability of the circular orbit for a time step $\Delta t = 10^{-3}$ years over 100 years. I tested the speed in the area $v \in (0.9, 1.4)\cdot2\pi $, and find that this produces stable elliptical orbits. Too small initial velocity, the Earth will be hurled towards the sun, and the mutual force will go to infinity, producing round-off errors. \\
+A initial velocity approximately the escape velocity $v = \sqrt{2}\cdot 2\pi \approx 1.4 \cdot 2\pi$ and the Earth will escape the sun's gravitational pull. \\
+I test the stability of the Euler and Verlet algorithms for time steps $\Delta t = 10^{-2}, 10^{-3}, 10^{-4}$ and check the conservation of energies and angular momentum. I check the relative error between $t=0$ and $t=100$ years. $L$ is the length of the angular momentum vector.
+The results are recorded in table 1, the values are absolute values.
 
-%% \begin{table}[h]	% a table
-% \centering
-% \caption{Caption}
-% \label{my-label}	% necessary?
-% \begin{tabular}{|l|l|}
-% \hline
-% \textbf{Method}  & \textbf{Time {[}s{]}} \\ \hline
-% Jacobi algorithm & $13.73$               \\ \hline
-% Armadillo        & $0.02$                \\ \hline
-% \end{tabular}
-% \end{table}
+\begin{widetext}
+\begin{table}[h]
+\centering
+\caption{Euler vs. Verlet method for y = 100 years}
+\label{eulVsVer}
+\begin{tabular}{@{}lllllll@{}}
+\hline
+                      & \textbf{Euler} &   &   & \textbf{Verlet} &   &   \\
+\hline
+$\Delta t$            & $10^{-2}$     & $10^{-3}$ & $10^{-4}$ & $10^{-2}$      & $10^{-3}$ & $10^{-4}$ \\
+$\Delta E_p/ E_{p,0}$ & 8.537e-1    & 6.567e-1 & 3.329e-1 &9.734e-4     & 9.870e-6 & 9.869e-8 \\
+$\Delta E_k/E_{k,0}$  & 8.263e-1     & 6.570e-1 & 3.333e-1 & 9.334e-4      & 9.870e-6 & 9.873e-8 \\
+$\Delta E/ E_0$       & 8.400e-1     & 6.569e-1 & 3.331e-1 & 2.042e-5      & 1.009e-11 & 2.095e-11 \\
+$\Delta L/L_0$         & 1.449e1     & 7.064e-1 & 2.240e-1     & 1.430e-3 & 1.444e-5 & 6.433e-6 \\ \hline
+time usage {[}s{]}    & 0.1362     & 1.391 & 14.66      & 0.1475 & 1.459 & 14.11
+\end{tabular}
+\end{table}
+\end{widetext}
+
+From this table we can see that while the Euler and Verlet method both scale linearly in time, the improvements in accuracy from the Verlet method are huge. \\ The Euler method has an error that goes from roughly 80 \% to 30\%, so there is little improvement to be made from reducing the time step. The gain in angular momentum is also very significant. This is likely due to the fact that the Euler method will consistently overshoot it's mark in a circular orbit, and will form a somewhat stable ellipse as errors accrue. The variations in total energy, and kinetic and potential energy are not too large from a slightly bent ellipse. However, a circular orbit always has zero angular momentum, while the ellipse does not, as the position and velocity must be orthogonal in circular motion. \\ \\
+For the Verlet method, we can see that the error scales roughly as $n^{2}$, which is a large improvement. In addition, both potential and kinetic energy are fairly well conserved, while the results for total energy are very good. In addition, angular momentum is about as well conserved as potential and kinetic energy, which suggest that numerical errors slightly perturb the circular orbit and we obtain a slight elliptical orbit.
+
+
+
 
 \subsection{\label{sec:Sub1.5}Escape velocity}
 
@@ -354,7 +375,7 @@ In Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} we have included three dimens
 \includegraphics[height=3.2in, width=0.5\textwidth]{plot/earth_sun_jupiter_mj1.png} \caption{The three-body problem where Jupiter is the red graph and the earth is the green. The motion of the sun can barely be seen as the blue graph.}\label{fig:plot/earth_sun_jupiter_mj1.png}
 \end{figure}
 
-The plot in Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$, we can clearly see that we have two unstable systems.
+The plot in Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$ we can see that we have two different-looking systems.
 
  \begin{figure}[H]
      \centering
@@ -371,6 +392,7 @@ The plot in Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we w
      \caption{Earth-Sun-Jupiter three-body system for bigger values of $M_{jupiter}$}\label{fig:2}
  \end{figure}
 
+The situation with $M_{Jupiter}\times 10$ looks different, but it still looks like a stable system. The sun is pulled by both Jupiter and Earth, and this causes the whole three-body system to drift. The other system with $M_{Jupiter}\times 1000$ looks more unstable than the two other systems. 
 We can also see this by looking at the conserved energy. For the system where we don't change Jupiter's mass, we get the change in energy
 
 \begin{equation}
@@ -383,10 +405,11 @@ which we can approximate as zero, because of round-off errors. This is also the 
 \Delta_{E} = 0.042
 \end{equation}
 
+Both the lack of conserved energy and the chaotic-looking plot when Jupiter's mass is multiplied by $1000$  tells us that there is lack of stability in this situation using the Verlet solver. With this being said, the Verlet solver keeps its stability in the situation most relevant to us when we are observing Jupiter, Earth, and the Sun with their respective masses. 
 
 \subsection{\label{sec:Sub3}Mercury's perihelion precession}
 
-In this project we looked at Mercury's perihelion-precession. We then added a relativistic correction to the force (equation \eqref{eq:force_relCorr}) and compared the angle at perihelion (equation \eqref{eq:per_prec}) to the situation with classical Newtonian gravitational force.\\
+In this project we looked at Mercury's perihelion-precession by adding a relativistic correction to the force (equation \eqref{eq:force_relCorr}) and compared the angle at perihelion (equation \eqref{eq:per_prec}) to the situation with classical Newtonian gravitational force.\\
 To get the right precision in this part of the project it was crucial to have enough steps for integration. In Table \ref{table:perPrec} we have shown the time and the perihelion precession for two different numbers of integration-steps. The perihelion precession is calculated by Equation \eqref{eq:per_prec2} for the $\theta_p$ values after a century.
 
 \begin{table}[h]
@@ -410,40 +433,9 @@ We expected the perihelion-precession to be $43''$. For $n=10^8$ integration-ste
 \includegraphics[height=3.2in, width=0.5\textwidth]{plot/perihelion_precision.png} \caption{Perihelion precession for Mercury around the sun for a century. The blue graph represent the classical case and the red graph represent the relativistic case. This is done with $n=10^8$ integrationsteps}\label{fig:mercury_perPrec}
 \end{figure}
 
+In Figure \ref{fig:mercury_perPrec} the values of the angels $\theta_p$ is not what we are looking for, as these values can come from numerical errors in our program etc. The important thing is the difference between the plots, as calculated in Table \ref{table:perPrec}. As said above, the value we get for $\theta_p$ leads us to the conclusion that the perihelion precession is caused physics explained by the theory of relativity.
 
 
-
-
-
-
-
-% \begin{figure*}[t!]	% a big figure
-%     \centering
-%     \begin{subfigure}[t]{0.5\textwidth}
-%         \centering
-%         \includegraphics[height=3.2in]{../omega001.png}
-%         \caption{Wavefunction for $\omega_{r} = 0.01$}
-%     \end{subfigure}%
-%     ~ 
-%     \begin{subfigure}[t]{0.5\textwidth}
-%         \centering
-%         \includegraphics[height=3.2in]{../omega05.png}
-%         \caption{Wavefunction for $\omega_{r} = 0.5$}
-%     \end{subfigure}
-
-%     \begin{subfigure}[t]{0.5\textwidth}
-%         \centering
-%         \includegraphics[height=3.2in]{../omega1.png}
-%         \caption{Wavefunction for $\omega_{r} = 1$}
-%     \end{subfigure}%
-%     ~ 
-%     \begin{subfigure}[t]{0.5\textwidth}
-%         \centering
-%         \includegraphics[height=3.2in]{../omega5.png}
-%         \caption{Wavefunction for $\omega_{r} = 5$}
-%     \end{subfigure}
-%     \caption{Two-electron wavefunction for various values of $\omega_{R}$}
-% \end{figure*}
 
 
 \section{Conclusion}
