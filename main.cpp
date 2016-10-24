@@ -12,7 +12,7 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e4; // numTimesteps*dt = years
+    int numTimesteps = 1e5; // numTimesteps*dt = years
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = years/numTimesteps; //years/numTimesteps;
