@@ -54,6 +54,7 @@
 \usepackage{blindtext}% lorem ipsum...
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
+\usepackage{float}
 
 %\usepackage[showframe,%Uncomment any one of the following lines to test 
 %%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
@@ -110,7 +111,7 @@
              %  but any date may be explicitly specified
 
 \begin{abstract}
-An abstract
+In this project we use object orientation to model the solar system. We implement the solar system using a C++ class based approach, and solve the differential equations given by Newton's laws to obtain the full motion. We solve the discretized version of the differential equations using Euler's method and the Velocity Verlet method and compare the efficiency and numerical stability. We also check the accuracy of our results using physical laws such as conservation of energy and momentum. SOMETHING ABOUT RESULTS HERE!
 
 % \begin{description}
 % \item[Usage]
@@ -132,13 +133,14 @@ An abstract
 \maketitle
 
 \section{\label{sec:Int}Introduction}
-An introduction.
-
+In this project we apply the principles of Object Orientation to a system of several objects whose interactions are governed by the gravitational force. We study the solar system consisting simply of the Earth and the sun, and the full solar system consisting of all 8 planets in addition to Pluto and the sun. We model each celestial object as a point particle in 3-dimensional space, and Newton's laws give us a simple ordinary differential equation governing the time evolution of each celestial object. A class based approach in C++ allows us to easily extend the code to obtain the full motion of the solar system. We solve the differential equations numerically using a length and time scale appropriate for our problem. \\ \\
+In particular, we will be implementing Euler's method and the Velocity Verlet method. Before comparing the results, we will note that Euler's method, though simple, can be quite numerically unstable. The Velocity Verlet method is well suited to our problem, and gives a good tradeoff betweeen numerical efficiency and accuracy. \\ \\
+Finally we will examine the perihelion precession of Mercury. One of the early successes of the general theory of relativity was to explain the precession of Mercury as it orbited the sun, after all other pure newtonian effects had been accounted for. We will be modelling this by adding a relativistic correction, and checking to see whether this correction gives us an appropriate perturbation of the orbit.
 
 \section{\label{sec:The}Theory and methods}
 
 \subsection{\label{sec:New}Newton's law of gravitation}
-Newton's law of gravitation states for two objects of mass $m_1$ and $m_2$, the force on object 1 from object 2 is given by \footnote{All theory in this project adapted from FYS3150 Project 3 (Fall 2016) $\href{link}{linkname}$},
+Newton's law of gravitation states that for two objects of mass $m_1$ and $m_2$, the gravitational force on object 1 from object 2 is given by \footnote{All theory in this project adapted from FYS3150 Project 3 (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/Projects/2016/Project3/pdf/Project3.pdf}{link}$},
 
 \begin{equation}
 	\bm{F_{1,2}} = \frac{Gm_1 m_2}{r^2} \bm{u_r} = \frac{Gm_1 m_2}{r^3} \bm{r}
@@ -163,91 +165,149 @@ which implies that
 	v_{1}^{2}r = G m_2.
 \end{equation}
 
-Introducing 1 AU $= 1.5\cdot10^{11}$m
+Introducing 1 AU $= 1.5\cdot10^{11}$m; the distance from the Earth to the sun, we let object 1 be the sun and object 2 the Earth, and we obtain
 
-
-% \begin{widetext}	% Write a matrix of some kind
-% \begin{equation}
-% \bm{Au} =
-% \begin{pmatrix}
-%   \frac{2}{\hbar^{2}} + V_{1} & -\frac{1}{\hbar^{2}} & 0 & \cdots & \cdots & 0 \\
-%   -\frac{1}{\hbar^{2}} & \frac{2}{\hbar^{2}} + V_{2} &  -\frac{1}{\hbar^{2}} & 0 &\cdots & \cdots \\
-%   0 & -\frac{1}{\hbar^{2}} & \frac{2}{\hbar^{2}} + V_{3} & -\frac{1}{\hbar^{2}} & 0 & \cdots \\
-%   \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-%   0 & \cdots & \cdots & -\frac{1}{\hbar^{2}} & \frac{2}{\hbar^{2}} + V_{N-3} & -\frac{1}{\hbar^{2}} \\
-%   0 & \cdots & \cdots & \cdots & -\frac{1}{\hbar^{2}} & \frac{2}{\hbar^{2}} + V_{N-2}
-% \end{pmatrix}
-% \begin{pmatrix}
-% 	u_{1} \\
-% 	u_{2} \\
-% 	\vdots \\
-% 	\\
-% 	\\
-% 	u_{N-2}
-% \end{pmatrix}
-% =	\lambda
-% \begin{pmatrix}
-% 	u_{1} \\
-% 	u_{2} \\
-% 	\vdots \\
-% 	\\
-% 	\\
-% 	u_{N-2}
-% \end{pmatrix}
-% \end{equation}
-% \end{widetext}
-
-\subsection{\label{sec:Sec}The second part}
-
-\begin{equation}\label{eq:22} % label an equation
-	1 = 1
+\begin{equation}
+	v_{earth}^2 r = G M_{\odot} = 4\pi^{2} AU^{3}/yr^{2},
 \end{equation}
 
-\subsection{\label{sec:Thi} Mercury's perihelion precision}
+where I have used that the circular velocity of the Earth is $v_{earth} = 2\pi r/T = 2\pi AU/yr$. This lets us rewrite our differential equation in a more natural length scale for the solar system. For a solar system with 1 sun and 9 planets (including Pluto) we may write the differential equation governing the motion of each celestial object $i$ as
+
+\begin{equation}{\label{eq:6}}
+\begin{split}
+	\bm{\ddot r_i} = \frac{\bm{F_{tot}}}{M_i}
+	&= \sum_{j \neq i} \frac{\bm{F_{i,j}}}{M_i} \\
+	&= -\sum_{j \neq i} \frac{4 \pi^{2} M_j}{r^{3}} \bm{r_{i,j}} \quad,
+\end{split}
+\end{equation}
+
+where the acceleration $\bm{a = \ddot r}$ is measured in units of $4\pi^{2} AU/yr^{2}$. The minus sign stems from the fact that the position vectors point in the opposite direction of the force vectors. We may also measure the mass of each celestial object by solar mass, by setting $M_{\odot} = 1$. \\
+
+\subsection{\label{sec:ODE}Ordinary differential equations}
+We discretize the differential equation by setting the number of time steps $n$, the number of years we want to evolve the system $y$ and the length of each time step $\Delta t = y/n$. The simplest way of solving equation \eqref{eq:6} numerically is Euler's method \footnote{Adapted from FYS3150 Lecture Notes, Ordinary Differential Equation (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/pub/ode/pdf/ode-print.pdf}{link}$}:
+
+\begin{equation}
+\begin{split}
+	& \bm{v_{i+1} = v_i} + \Delta t \cdot \bm{F_{tot}/M_i} \qquad i=0,1,2,..,{n-1} \\
+	& \bm{x_{i+1} = x_{i}} + \Delta t \cdot \bm{v_i}
+\end{split}
+\end{equation}
+
+A significant improvement would be the Velocity Verlet algorithm. For a second order differential equation of the form
+
+\begin{equation}
+	\frac{d^{2}}{dt^{2}}\bm{r} = \bm{F}(\bm{r}, t),
+\end{equation}
+
+(such as ours!) we may rewrite our differential equations as:
+
+\begin{equation}
+\begin{split}
+	&\bm{r_{i+1} = r_i} + \Delta t \cdot \bm{v_i} + \frac{(\Delta t)^{2}}{2} \bm{a_i} \\
+	& \bm{v_{i+1} = v_i} + \frac{\Delta t}{2}(\bm{a_{i+1} + a_i}).
+\end{split}
+\end{equation}
+
+Note that the velocity depends on the acceleration at time $t_{i+1}$. This is a function of $\bm{r_{i+1}}$ which needs to be calculated first. The error in this method goes like $\mathcal{O}(\Delta t^{3})$ locally, which means we get a global error $\mathcal{O}(\Delta t^{2})$, compared to Euler's method which has a total error $\mathcal{O}(\Delta t)$.
+
+\subsection{\label{sec:Con}Conservation laws}
+In Newtonian mechanics, for a system of objects without any external forces we have three fundamental conservations laws: The conservation of energy, the conservation of momentum and the conservation of angular momentum. \\
+For the solar system, if we neglect any forces other than the pure Newtonian gravitational force (and the celestial objects are taken to be point masses) we may write the total energy as
+
+\begin{equation}\label{eq:10}
+	E_{tot} = \sum_{i \neq j}{\frac{1}{2}m_i v_{i}^{2} - \frac{Gm_i m_j}{r_{i,j}}},
+\end{equation}
+This is a conserved, or time invariant quantity; that is to say it must be the same in our calculations for all times $t_i$.\\
+The total momentum of the system (no external forces applied) is also a conserved quantity and can be given as
+
+\begin{equation}
+	\bm{p_{tot}} = \sum_i{m_i\bm{v_i}}.
+\end{equation}
+
+If we wish to study our system from the gravitational center of mass at the origin with $\bm{p_{tot} = 0}$ we require
+
+\begin{equation}
+\begin{split}
+	& m_1 \bm{r_1} + ... + m_N \bm{r_N} = \bm{0} \\
+	& m_1 \bm{v_1} + ... + m_N \bm{v_N} = \bm{0}.
+\end{split}
+\end{equation}
+
+This gives us $N-1$ degrees of freedom to choose the initial positions and velocitites. We can then fullfill these conditions by requiring the sun to have an initial position and velocity
+
+\begin{equation}
+\begin{split}
+	& \bm{r_{\odot}} = \frac{1}{M_{\odot}}(m_2 \bm{r_2} + ... + m_N \bm{r_N}) \\
+	& \bm{v_{\odot}} = \frac{1}{M_{\odot}}(m_2 \bm{v_2} + ... + m_N \bm{v_N}).
+\end{split}
+\end{equation}
+
+As Newton's second law gives us conservation of momentum, a rotational analog of Newton's second law gives us conservation of angular momentum.
+For a system unaffected by external torque, the total angular momentum is conserved.
+
+\begin{equation}\label{eq:14}
+	\bm{L_{tot}} = \sum_{i}{\bm{r_i} \times \bm{v_i}}
+\end{equation}
+
+Note that momentum, energy and angular momentum will constantly be exchanged between the objects of the system via the gravitational forces, and these conservation laws are only valid when examining the system as a whole. If we didn't model the celestial objects as point particles there could also be several extra degrees of freedom in which energy and momentum could be distributed, but this is negligible for our purposes.
+
+\subsection{\label{sec:Cel}Celestial mechanics}
+For a planet in orbit around a much more massive celestial object of mass $M$, we may find the escape velocity of the planet by finding the minimum kinetic energy required to move the planet infinitely far away. We thus acquire an analytical expression:
+
+\begin{equation}\label{eq:escape_vel}
+	v_{esc} = \sqrt{\frac{2GM}{r}}.
+\end{equation}
+
+When considering the Earth-sun system this is simply $v_{esc} = \sqrt{8\pi^{2}}$, when expressed in $AU/yr$. \\ \\
+For a planet (mass $m$) in uniform circular orbit around a much more massive object of mass $M$ we have that the distance between the objects $r = $ constant. From equation \eqref{eq:10} this implies that the potential energy is a conserved quantity. By studying for example the expression for the centripetal acceleration $a = F(r)/m = v^{2}/r$ it is easy to see that the speed must be constant and therefore the kinetic energy must be conserved.\\
+From vector calculus we find for circular motion that $\bm{r} \perp \bm{v}$, and from equation \eqref{eq:14} we obtain conservation of angular momentum.\\
+As the velocity is constantly changing, the vector momentum $m\bm{v}$ is not conserved. The scalar quantity $mv$ is however (as speed is constant).\\
+The speed $v = \left|\bm{v} \right|$ is easily obtained for the Earth-sun system, $v = 2\pi r/T = 2\pi AU/yr$.
+
+\subsection{\label{sec:Thi} Mercury's perihelion precession}
 
 In classical mechanics, using Newtons law of gravity, we will get closed elliptical orbits for a planet moving around the sun. The perihelion-position (the point where the planet is closest to the sun) for the planet will appear at the same place every orbit. In real life, this does not happen. What we see is that the perihelion-position will move slightly for every orbit for a planet around the sun. There are different factors in the universe that causes this to happen. One factor is the theory of relativity. \\
-The perihelion-precision is the difference between the postulated classical and the observed movement of the perihelion-position. When subtracting all factors that causes the shift of the perihelion-position except for the theory of relativity, the value of the perihelion precision is $43''$ per century. \footnote{See M.H. Jensen, Computational Physics: Project 3, fall semester 2016, available at $\href{https://github.com/CompPhysics/ComputationalPhysics/blob/master/doc/Projects/2016/Project3/pdf/Project3.pdf}{link}$}
+The perihelion-precession is the difference between the postulated classical and the observed movement of the perihelion-position. When subtracting all factors that causes the shift of the perihelion-position except for the theory of relativity, the value of the perihelion precession is $43''$ per century. \footnote{See M.H. Jensen, Computational Physics: Project 3, fall semester 2016, available at $\href{https://github.com/CompPhysics/ComputationalPhysics/blob/master/doc/Projects/2016/Project3/pdf/Project3.pdf}{link}$}
 \\\\
 When simulating this in our project, we add a relativistic correction to the classical force, so we get
-\begin{equation}
+\begin{equation}\label{eq:force_relCorr}
 F_{1,2} = \frac{GM_1M_2}{r^2}\bigg[ 1 + \frac{3l^2}{r^2c^2}\bigg]
 \end{equation}
 
 where $l = |\vec{r} \times \vec{v}|$ is the magnitude of the planets orbital angular momentum per unit mass and $c$ is the speed of light in vacuum. We looked at a simulation of Mercury and the sun for a century, and found all the perihelion-positions. We could then calculate the angle $\theta_p$ by 
-\begin{equation}
+\begin{equation}\label{eq:per_prec}
 \tan \theta_p = \frac{y_p}{x_p} \Rightarrow \theta_p = \arctan(\frac{y_p}{x_p})
 \end{equation}
 
-where $y_p$ and $x_p$ are the $x$ and $y$ coordinates at the perihelion. The perihelion precision is then given by
+where $y_p$ and $x_p$ are the $x$ and $y$ coordinates at the perihelion. The perihelion precession is then given by
 
-\begin{equation}
+\begin{equation}\label{eq:per_prec2}
 \theta_{p, classical} - \theta_{p, relativistic}
 \end{equation}
 
 
-%\footnote{See M.H. Jensen, Computational Physics: Lecture Notes Fall 2015, ch. x.y, available at $\href{link}{linkname}$}
 
-% \begin{equation} % another matrix
-% S = 
-% 	\begin{pmatrix}
-% 		1 & 0 & \cdots & 0 & 0 \cdots & 0 & 0 \\
-% 		0 & 1 & \cdots & 0 & 0 \cdots & 0 & 0 \\
-% 		\cdots & \cdots & \cdots & \cdots & \cdots & 0 & \cdots \\
-% 		0 & 0 & \cdots & \cos(\theta) & 0 \cdots & 0 & \sin(\theta) \\
-% 		0 & 0 & \cdots & 0 & 1 \cdots & 0 & 0 \\
-% 		\cdots & \cdots & \cdots & \cdots & \cdots & 0 & \cdots \\
-% 		0 & 0 & \cdots & 0 & 0 \cdots & 1& 0 \\
-% 		0 & 0 & \cdots & -\sin(\theta) & 0 \cdots & 0 & \cos(\theta) \\	
-% 	\end{pmatrix}
-% \end{equation}
+\subsection{Object Orientation}
+A object oriented approach to our problem in short allows us to write the code once, and use it many times \footnote{See also FYS3150 Lecture Notes, Object Orientation (Fall 2016) $\href{https://compphysics.github.io/ComputationalPhysics/doc/pub/oo/pdf/oo-print.pdf}{link}$}.
+As we are interested in celestial objects characterized by their position, velocity and mass; a class based approach lets us easily implement the properties and interactions of each celestial object in the solar system. In addition, it makes it quite easy to extend the code to include and calculate other properties such as the force on a single object or the total angular momentum of the system. We can also include other functionality such as writing to file or choosing the method of numerical integration without interfering with other parts of the code.
+
+
+\subsection{\label{sec:Uni}Testing}
+As mentioned above, we have severial conserved quantities to consider as we evolve our system in time. A test of whether the total energy of the solar system is conserved in time, or whether the angular momentum of a circular orbit remains zero at all times, is a good check to make sure our calculations are correct and sufficiently precise.
+
+%\footnote{See M.H. Jensen, Computational Physics: Lecture Notes Fall 2015, ch. x.y, available at $\href{link}{linkname}$}
+% A reference \footnote{See M.H. Jensen, Computational Physics: Lecture Notes Fall 2015, ch. x.y, available at $\href{link}{linkname}$}
 
 
 \section{Results and discussion}
+In our final implementation it is somewhat difficult to make an assessment of the total number of floating points operations involved, and questionable if it would be of much use. This is because the program involves a large number of function calls, if tests, vector operations and recalculation of quantities. Some of these inefficiencies might be alleviated by an intelligent compiler. We do however find that the time usage scales roughly linearly with the number of time steps $n$.
 
-\subsection{\label{sec:Sub1}First subpart}
-An equation reference % \eqref{eq:x}
 
-% \begin{table}[h]	% a table
+
+\subsection{\label{sec:Sub1}Earth-Sun system}
+
+
+%% \begin{table}[h]	% a table
 % \centering
 % \caption{Caption}
 % \label{my-label}	% necessary?
@@ -259,60 +319,98 @@ An equation reference % \eqref{eq:x}
 % \end{tabular}
 % \end{table}
 
-\subsection{\label{sec:Sub2}Three-body problem}
+\subsection{\label{sec:Sub1.5}Escape velocity}
 
-In Figure (1) we have included three dimensional picture of the three-body problem where we have used the Verlet method for integration.
+We looked at a planet which started at a position $1AU$ from the sun, and we were to find its escape velocity. Using equation \ref{eq:escape_vel} we found that the escape velocity for the Earth-Sun system should be $v = \sqrt{8\pi^2}$. When doing this numerically, we started by using the exact escape velocity and multiplying this by numbers close to $1$ (see Figure \ref{fig:esc_vel})
 
-\begin{figure}[h]
-\centering
-\includegraphics[height=3.2in, width=0.5\textwidth]{plot/earth_sun_jupiter_mj1.png} \caption{The three-body problem where Jupiter is the red graph and the earth is the green. The motion of the sun can barely be seen as the blue graph.}
-\end{figure}
-
-Analysing this plot by looking at it tells us that the system is stable. The Sun seems to be moving slightly and the planets move in what appears to be closed and elliptical orbits.
-
- \begin{figure}[t!]	% a big figure
+ \begin{figure}[H]	% a big figure
      \centering
-     \begin{subfigure}[t]{0.5\textwidth}
+     \begin{subfigure}{0.5\textwidth}
          \centering
-         \includegraphics[height=3.2in]{plot/earth_sun_jupiter_mj10.png}
-         \caption{$M_{Jupiter}\times 10$}
+         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/0989vEsc.png}
+         \caption{}
      \end{subfigure}
-     \begin{subfigure}[t]{0.5\textwidth}
+     \begin{subfigure}{0.5\textwidth}
          \centering
-         \includegraphics[height=3.2in]{plot/earth_sun_jupiter_mj1000.png}
-         \caption{$M_{Jupiter}\times 1000$}
-     \end{subfigure}
-     \caption{Earth-Sun-Jupiter three-body system for bigger values of $M_{jupiter}$}
+         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/vEsc.png}
+         \caption{}
+     \end{subfigure} 
+     \caption{Eart-Sun system with Earth's escape-velocity}\label{fig:esc_vel}
  \end{figure}
  
-In Figure (2) the motion of the planets are clearly different. In (a) Jupiter's mass is multiplied by 10 and in (b) the mass is multiplied by 1000 (which is close to the mass of the sun).\\
-The stability of the solutions seem to st
+ We can see that for the initial escape velocity we found theoretically, the planet does escape.
+As the figure shows, there is some numerical error here, since the planet also escapes with an initial value smaller than the theoretical escape-velocity.  
+  
 
 
-\subsection{\label{sec:Sub3}Mercury's perihelion precision}
 
-In this project we looked at Mercury's perihelion-precision. We then added a relativistic correction to the force (equation 6) and compared the angle at perihelion (equation 7) to the situation with classical Newtonian gravitational force.\\
-To get the right precision in this part of the project it was crucial to have enough steps for integration. In Table 1 we have shown the time and the perihelion precision for two different numbers of integration-steps. The perihelion precision is calculated by Equation 8 for the $\theta_p$ values after a century.
+
+\subsection{\label{sec:Sub2}Three-body problem}
+
+In Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} we have included three dimensional picture of the three-body problem where we have used the Verlet method for integration.
+
+\begin{figure}[H]
+\centering
+\includegraphics[height=3.2in, width=0.5\textwidth]{plot/earth_sun_jupiter_mj1.png} \caption{The three-body problem where Jupiter is the red graph and the earth is the green. The motion of the sun can barely be seen as the blue graph.}\label{fig:plot/earth_sun_jupiter_mj1.png}
+\end{figure}
+
+The plot i Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$, we can clearly see that we have two unstable systems.
+
+ \begin{figure}[H]
+     \centering
+     \begin{subfigure}[h]{0.5\textwidth}
+         \centering
+         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/earth_sun_jupiter_mj10.png}
+         \caption{$M_{Jupiter}\times 10$}
+     \end{subfigure}
+     \begin{subfigure}[h]{0.5\textwidth}
+         \centering
+         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/earth_sun_jupiter_mj1000.png}
+         \caption{$M_{Jupiter}\times 1000$}
+     \end{subfigure}
+     \caption{Earth-Sun-Jupiter three-body system for bigger values of $M_{jupiter}$}\label{fig:2}
+ \end{figure}
+
+We can also see this by looking at the conserved energy. For the system where we don't change Jupiter's mass, we get the change in energy
+
+\begin{equation}
+\Delta_{E} = 2.0\times 10^{-8}
+\end{equation}
+
+which we can approximate as zero, because of round-off errors. This is also the case when Jupiter's mass is multiplied by $10$, while for the case where Jupiter's mass is multiplied by $1000$, we get the change in energy
+
+\begin{equation}
+\Delta_{E} = 0.042
+\end{equation}
+. This tells us that the fuck
+
+
+\subsection{\label{sec:Sub3}Mercury's perihelion precession}
+
+In this project we looked at Mercury's perihelion-precession. We then added a relativistic correction to the force (equation \eqref{eq:force_relCorr}) and compared the angle at perihelion (equation \eqref{eq:per_prec}) to the situation with classical Newtonian gravitational force.\\
+To get the right precision in this part of the project it was crucial to have enough steps for integration. In Table \ref{table:perPrec} we have shown the time and the perihelion precession for two different numbers of integration-steps. The perihelion precession is calculated by Equation \eqref{eq:per_prec2} for the $\theta_p$ values after a century.
 
 \begin{table}[h]
 \centering
-\caption{Perihelion precision for different timesteps}
-\label{my-label}
+\caption{Perihelion precession for different timesteps using the Verlet solver}
+\label{table:perPrec}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{Integration steps $n$} & \textbf{Time {[}$s${]}} & \textbf{Perihelion precision {[}''{]}} \\ \hline
+\textbf{Integration steps $n$} & \textbf{Time {[}$s${]}} & \textbf{Perihelion precession {[}''{]}} \\ \hline
 $10^8$                 & $0.3$                   & $47.72$                                \\ \hline
 $10^5$                 & $234.3$                 & $165.0$                                \\ \hline
 \end{tabular}
 \end{table}
 
 
-We expected the perihelion-precision to be $43''$. For $n=10^8$ integration-steps we get an answer that is close enough to show that this is caused by relativistic correction. Also, if we were to to more integration-steps, our computers would spend too much time doing it.
- In Figure (?) we have included a plot for Mercury's perihelion precision. From this we can see that the precision between the classical case and the relativistic case gets bigger as time goes by.
-\begin{figure}[h]
+We expected the perihelion-precession to be $43''$. For $n=10^8$ integration-steps we get an answer that is close enough to show that this is caused by relativistic correction. Also, if we were to to more integration-steps, our computers would spend too much time doing it.
+ In Figure \ref{fig:mercury_perPrec} we have included a plot for Mercury's perihelion precession. From this we can see that the precession between the classical case and the relativistic case gets bigger as time goes by.
+
+\begin{figure}[H]
 \centering
-\includegraphics[height=3.2in, width=0.5\textwidth]{plot/perihelion_precision.png} \caption{Perihelion precision for Mercury around the sun for a century. The blue graph represent the classical case and the red graph represent the relativistic case. This is done with $n=10^8$ integrationsteps}
+\includegraphics[height=3.2in, width=0.5\textwidth]{plot/perihelion_precision.png} \caption{Perihelion precession for Mercury around the sun for a century. The blue graph represent the classical case and the red graph represent the relativistic case. This is done with $n=10^8$ integrationsteps}\label{fig:mercury_perPrec}
 \end{figure}
+
 
 
 
@@ -350,7 +448,7 @@ We expected the perihelion-precision to be $43''$. For $n=10^8$ integration-step
 
 
 \section{Conclusion}
-Do stuff.
+Object orientation makes this mostly easy. Weird flow of the exercices? Implement unit testing? Inefficient IF tests? Time constraints?
 
 \section{Appendix}
 All code used is available at: %\href{link}{linkname} \\
