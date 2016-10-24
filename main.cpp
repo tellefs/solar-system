@@ -13,7 +13,10 @@ using namespace std;
 int main(int numArguments, char **arguments)
 {
     int numTimesteps = 1e5; // numTimesteps*dt = years
+<<<<<<< HEAD
+=======
 
+>>>>>>> 283c6196da46c7d90f841340b892c19176922030
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = years/numTimesteps; //years/numTimesteps;
