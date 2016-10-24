@@ -50,9 +50,7 @@ Thumbs.db
 *.exe
 
 # Image files
-*.png
-*.bmp
-*.jpg
+
 
 # Text files
 # *.txt ?

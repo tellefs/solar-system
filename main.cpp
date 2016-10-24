@@ -13,6 +13,10 @@ using namespace std;
 int main(int numArguments, char **arguments)
 {
     int numTimesteps = 1e5; // numTimesteps*dt = years
+<<<<<<< HEAD
+=======
+
+>>>>>>> 283c6196da46c7d90f841340b892c19176922030
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = years/numTimesteps; //years/numTimesteps;
@@ -84,7 +88,7 @@ int main(int numArguments, char **arguments)
     // Three body problem
     cout << "Earth-Jupiter-Sun system: " << endl;
     SolarSystem threebody;
-    double jupiter_factor = 10.;
+    double jupiter_factor = 1.;
     threebody.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0 );
     threebody.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*AUday_to_AUyear,
