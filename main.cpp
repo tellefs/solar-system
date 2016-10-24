@@ -15,14 +15,14 @@ int main(int numArguments, char **arguments)
     int numTimesteps = 1e5; // numTimesteps*dt = years
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
-    double dt = 0.1; //years/numTimesteps;
+    double dt = years/numTimesteps; //years/numTimesteps;
     double sun_mass = 1.989e30;
     double AUday_to_AUyear = 365.242199;
     double t_elapsed;  
     double pi = M_PI;
     double G = 4*pi*pi;
 
-
+/*
     // Circular orbit
     cout << "Earth-Sun system: " << endl;
     SolarSystem earthSun;
@@ -74,7 +74,7 @@ int main(int numArguments, char **arguments)
     earthSun2.printEnergy();
     cout << "Total angular momentum: " << earthSun2.angularMomentum() << endl;
     cout << "time elapsed: " << t_elapsed << endl;
-
+*/
 
     // Three body problem
     cout << "Earth-Jupiter-Sun system: " << endl;
@@ -93,7 +93,7 @@ int main(int numArguments, char **arguments)
     threebody.writeToFile("positions_earth_sun_jup.dat");   // initial position
 
     clock_t start2 = clock();
-    //Verlet integrator(dt);
+    Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(threebody, false);
         threebody.writeToFile("positions_earth_sun_jup.dat");
