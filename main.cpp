@@ -12,7 +12,7 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 1e7; // numTimesteps*dt = years
+    int numTimesteps = 1e4; // numTimesteps*dt = years
     double years = 100;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
     double dt = years/numTimesteps; //years/numTimesteps;
@@ -22,7 +22,7 @@ int main(int numArguments, char **arguments)
     double pi = M_PI;
     double G = 4*pi*pi;
 
-/*
+
     // Circular orbit
     cout << "Earth-Sun system: " << endl;
     SolarSystem earthSun;
@@ -32,24 +32,29 @@ int main(int numArguments, char **arguments)
                                      (6e24)/sun_mass)
                                     ; //earth,  init. conditions for pos and vel retrieved from NASA october 5. 2016
     earthSun.calculateForcesAndEnergy();
-    earthSun.printEnergy();
-    cout << "Total angular momentum: " << earthSun.angularMomentum() << endl;
+    double E0, E0K, E0P, L0, E_err, Ek_err, Ep_err, L0_err;
+    E0 = earthSun.totalEnergy(); E0K = earthSun.kineticEnergy(); E0P = earthSun.potentialEnergy(); L0 = earthSun.angularMomentum().length();
     earthSun.writeToFile("positions_earth_sun.dat");   // initial position
 
     clock_t start = clock();
-    // Euler integrator(dt);
+    //Euler integrator(dt);
     Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(earthSun, false);
+        //integrator.integrateOneStep(earthSun);
         earthSun.writeToFile("positions_earth_sun.dat");
     }
     clock_t finish = clock();
     t_elapsed = double(finish - start) / CLOCKS_PER_SEC;
-    earthSun.printEnergy();
-    cout << "Total angular momentum: " << earthSun.angularMomentum() << endl;
+    cout << "dt = " << dt << endl;
+    E_err = fabs((earthSun.totalEnergy()-E0)/E0);
+    Ek_err = fabs((earthSun.kineticEnergy()-E0K)/E0K);
+    Ep_err = fabs((earthSun.potentialEnergy()-E0P)/E0P);
+    L0_err = fabs((earthSun.angularMomentum().length()-L0)/L0);
+    cout << E_err << " " << Ek_err<< " "  << " " << Ep_err << " " << L0_err << endl;
     cout << "time elapsed: " << t_elapsed << endl;
 
-
+/*
     // Escape velocity
     cout << "Earth-Sun (escape) system: " << endl;
     SolarSystem earthSun2;
@@ -74,7 +79,7 @@ int main(int numArguments, char **arguments)
     earthSun2.printEnergy();
     cout << "Total angular momentum: " << earthSun2.angularMomentum() << endl;
     cout << "time elapsed: " << t_elapsed << endl;
-*/
+
 
     // Three body problem
     cout << "Earth-Jupiter-Sun system: " << endl;
@@ -91,15 +96,19 @@ int main(int numArguments, char **arguments)
                                      jupiter_factor*(1e27)/sun_mass); //jupiter
     threebody.calculateForcesAndEnergy();
     threebody.writeToFile("positions_earth_sun_jup.dat");   // initial position
+    threebody.printEnergy();
+    cout << "Total angular momentum: " << threebody.angularMomentum() << endl;
 
     clock_t start2 = clock();
-    Verlet integrator(dt);
+    //Verlet integrator(dt);
     for(int timestep=0; timestep<numTimesteps; timestep++) {
         integrator.integrateOneStep(threebody, false);
         threebody.writeToFile("positions_earth_sun_jup.dat");
     }
     clock_t finish2 = clock();
     t_elapsed = double(finish2 - start2) / CLOCKS_PER_SEC;
+    threebody.printEnergy();
+    cout << "Total angular momentum: " << threebody.angularMomentum() << endl;
     cout << "time elapsed: " << t_elapsed << endl;
 
 
@@ -211,7 +220,7 @@ int main(int numArguments, char **arguments)
     }
     //cout << "I just created a solar system that has " << solarSystem.bodies().size() << " objects." << endl;
 
-    /*
+
     // Mercury perihelion precession
 
 

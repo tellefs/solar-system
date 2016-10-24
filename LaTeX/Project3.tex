@@ -253,7 +253,7 @@ Note that momentum, energy and angular momentum will constantly be exchanged bet
 \subsection{\label{sec:Cel}Celestial mechanics}
 For a planet in orbit around a much more massive celestial object of mass $M$, we may find the escape velocity of the planet by finding the minimum kinetic energy required to move the planet infinitely far away. We thus acquire an analytical expression:
 
-\begin{equation}
+\begin{equation}\label{eq:15}
 	v_{esc} = \sqrt{\frac{2GM}{r}}.
 \end{equation}
 
@@ -261,7 +261,11 @@ When considering the Earth-sun system this is simply $v_{esc} = \sqrt{8\pi^{2}}$
 For a planet (mass $m$) in uniform circular orbit around a much more massive object of mass $M$ we have that the distance between the objects $r = $ constant. From equation \eqref{eq:10} this implies that the potential energy is a conserved quantity. By studying for example the expression for the centripetal acceleration $a = F(r)/m = v^{2}/r$ it is easy to see that the speed must be constant and therefore the kinetic energy must be conserved.\\
 From vector calculus we find for circular motion that $\bm{r} \perp \bm{v}$, and from equation \eqref{eq:14} we obtain conservation of angular momentum.\\
 As the velocity is constantly changing, the vector momentum $m\bm{v}$ is not conserved. The scalar quantity $mv$ is however (as speed is constant).\\
-The speed $v = \left|\bm{v} \right|$ is easily obtained for the Earth-sun system, $v = 2\pi r/T = 2\pi AU/yr$.
+The speed $v = \left|\bm{v} \right|$ is easily obtained for the Earth-sun system, 
+
+\begin{equation}\label{eq:16}
+	v = 2\pi r/T = 2\pi AU/yr.	
+\end{equation}
 
 \subsection{\label{sec:Thi} Mercury's perihelion precision}
 
@@ -299,23 +303,32 @@ As mentioned above, we have several conserved quantities to consider as we evolv
 
 
 \section{Results and discussion}
+The masses of every planet is obtained from the table in project 3. The positions and velocities are obtained from NASA's website \url{http://ssd.jpl.nasa.gov/horizons.cgi#top} on 05.10.2016. \\
+
 In our final implementation it is somewhat difficult to make an assessment of the total number of floating points operations involved, and questionable if it would be of much use. This is because the program involves a large number of function calls, if tests, vector operations and recalculation of quantities. Some of these inefficiences might be alleviated by an intelligent compiler. We do however find that the time usage scales roughly linearly with the number of time steps $n$.
 
 \subsection{\label{sec:Sub1}Earth-Sun system}
+We have already found an expression for the speed required for a stable circular orbit, equation \eqref{eq:16}. I tested the stability of the circular orbit for a time step $\Delta t = 10^{-3}$ years over 100 years. I tested the speed in the area $v \in (0.9, 1.4)\cdot2\pi $, and find that this produces stable elliptical orbits. Too small initial velocity, the Earth will be hurled towards the sun, and the mutual force will go to infinity, producing round-off errors. \\
+A initial velocity approximately the escape velocity $v = \sqrt{2}\cdot 2\pi \approx 1.4 \cdot 2\pi$ and the Earth will escape the sun's gravitational pull. \\
+I test the stability of the Euler and Verlet algorithms for time steps $\Delta t = 10^{-2}, 10^{-3}, 10^{-4}$ and check the conservation of energies and angular momentum. I check the relative error between $t=0$ and $t=100$ years. $L$ is the length of the angular momentum vector.
+The results are recorded in table 1, the values are absolute values.
 
-
-% \begin{table}[h]	% a table
-% \centering
-% \caption{Caption}
-% \label{my-label}	% necessary?
-% \begin{tabular}{|l|l|}
-% \hline
-% \textbf{Method}  & \textbf{Time {[}s{]}} \\ \hline
-% Jacobi algorithm & $13.73$               \\ \hline
-% Armadillo        & $0.02$                \\ \hline
-% \end{tabular}
-% \end{table}
-
+\begin{table}[h]
+\centering
+\caption{Euler vs. Verlet method for y = 100 years}
+\label{eulVsVer}
+\begin{tabular}{@{}lllllll@{}}
+\hline
+                      & \textbf{Euler} &   &   & \textbf{Verlet} &   &   \\
+\hline
+$\Delta t$            & $10^{-2}$     & $10^{-3}$ & $10^{-4}$ & $10^{-2}$      & $10^{-3}$ & $10^{-4}$ \\
+$\Delta E_p/ E_{p,0}$ & 0.8537     & 0.6567 & 0.3329 & $9.734\cdot10^{-4}$     & 0 & 0 \\
+$\Delta E_k/E_{k,0}$  & 0.8263     & 0.6570 & 0.3333 & 0      & 0 & 0 \\
+$\Delta E/ E_0$       & 0.8400     & 0.6569 & 0.3331 & 0      & 0 & 0 \\
+$\Delta L/L_0$         & 1.449     & 0.7064 & 0.2240     & 0 & 0 \\ \hline
+time usage {[}s{]}    & 0.1362     & 1.391 & 14.66      & 0 & 0
+\end{tabular}
+\end{table}
 
 \subsection{\label{sec:Sub2}Mercury's perihelion precision}
 

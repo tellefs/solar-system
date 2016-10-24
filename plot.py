@@ -41,7 +41,7 @@ with open("../build-SolarSystem-Desktop-Debug/positions.dat", "r") as infile: #f
 	plt.show()
 """
 
-with open("../build-SolarSystem-Desktop-Debug/positions_earth_sun_jup.dat", "r") as infile: #for tellef
+with open("../build-SolarSystem-Desktop_Qt_5_7_0_clang_64bit-Debug/positions_earth_sun.dat", "r") as infile: #for tellef
 
 	plot_solarsystem(infile)
 	plt.show()

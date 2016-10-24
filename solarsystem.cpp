@@ -43,9 +43,9 @@ void SolarSystem::calculateForcesAndEnergy()
             body2.force -= force;
 
             m_potentialEnergy += G*body1.mass*body2.mass/dr; // Supposed to be negative?
-            m_angularMomentum += body1.position.cross(body1.velocity);
-        }
 
+        }
+        m_angularMomentum += body1.position.cross(body1.velocity);
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
         m_totalEnergy = m_kineticEnergy + m_potentialEnergy;
     }
