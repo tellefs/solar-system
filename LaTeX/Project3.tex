@@ -330,10 +330,45 @@ time usage {[}s{]}    & 0.1362     & 1.391 & 14.66      & 0.1467 & 0
 \end{tabular}
 \end{table}
 
+\begin{figure}
+\includegraphics[height=3.2in, width=0.5\textwidth]{plot/earth_sun_jupiter_mj1.png} \caption{The three-body problem where Jupiter is the red graph and the earth is the green. The motion of the sun can barely be seen as the blue graph.}\label{fig:plot/earth_sun_jupiter_mj1.png}
+\end{figure}
+
+The plot in Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$, we can clearly see that we have two unstable systems.
+
+ \begin{figure}[h]
+     \centering
+     \begin{subfigure}[h]{0.5\textwidth}
+         \centering
+         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/earth_sun_jupiter_mj10.png}
+         \caption{$M_{Jupiter}\times 10$}
+     \end{subfigure}
+     \begin{subfigure}[h]{0.5\textwidth}
+         \centering
+         \includegraphics[height=3.2in, width=0.99\textwidth]{plot/earth_sun_jupiter_mj1000.png}
+         \caption{$M_{Jupiter}\times 1000$}
+     \end{subfigure}
+     \caption{Earth-Sun-Jupiter three-body system for bigger values of $M_{jupiter}$}\label{fig:2}
+ \end{figure}
+
+We can also see this by looking at the conserved energy. For the system where we don't change Jupiter's mass, we get the change in energy
+
 \subsection{\label{sec:Sub2}Mercury's perihelion precision}
 
 In this project we looked at Mercury's perihelion-precision. We then added a relativistic correction to the force (equation 6) and compared the angle at perihelion (equation 7) to the situation with classical Newtonian gravitational force.\\
 To get the right precision in this part of the project it was crucial to have enough steps for integration. In Table 1 we have shown the time and the perihelion precision for two different numbers of integration-steps. The perihelion precision is calculated by Equation 8 for the $\theta_p$ values after a century.
+=======
+which we can approximate as zero, because of round-off errors. This is also the case when Jupiter's mass is multiplied by $10$, while for the case where Jupiter's mass is multiplied by $1000$, we get the change in energy
+
+\begin{equation}
+\Delta_{E} = 0.042
+\end{equation}
+
+
+\subsection{\label{sec:Sub3}Mercury's perihelion precession}
+
+In this project we looked at Mercury's perihelion-precession. We then added a relativistic correction to the force (equation \eqref{eq:force_relCorr}) and compared the angle at perihelion (equation \eqref{eq:per_prec}) to the situation with classical Newtonian gravitational force.\\
+To get the right precision in this part of the project it was crucial to have enough steps for integration. In Table \ref{table:perPrec} we have shown the time and the perihelion precession for two different numbers of integration-steps. The perihelion precession is calculated by Equation \eqref{eq:per_prec2} for the $\theta_p$ values after a century.
 
 \begin{table}[h]
 \centering

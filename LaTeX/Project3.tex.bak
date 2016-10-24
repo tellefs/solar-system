@@ -354,7 +354,7 @@ In Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} we have included three dimens
 \includegraphics[height=3.2in, width=0.5\textwidth]{plot/earth_sun_jupiter_mj1.png} \caption{The three-body problem where Jupiter is the red graph and the earth is the green. The motion of the sun can barely be seen as the blue graph.}\label{fig:plot/earth_sun_jupiter_mj1.png}
 \end{figure}
 
-The plot i Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$, we can clearly see that we have two unstable systems.
+The plot in Figure \ref{fig:plot/earth_sun_jupiter_mj1.png} reproduces what we would expect to see in real life with the planets moving around the sun. Comparing this image to Figure \ref{fig:2} where we have increased the mass of Jupiter by $10$ and $1000$, we can clearly see that we have two unstable systems.
 
  \begin{figure}[H]
      \centering
@@ -382,7 +382,6 @@ which we can approximate as zero, because of round-off errors. This is also the 
 \begin{equation}
 \Delta_{E} = 0.042
 \end{equation}
-. This tells us that the fuck
 
 
 \subsection{\label{sec:Sub3}Mercury's perihelion precession}
